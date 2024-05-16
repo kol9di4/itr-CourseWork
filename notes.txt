@@ -1,3 +1,5 @@
 Searching:
     ElasticSearch
     Sphinx
+WebSocket:
+    https://www.youtube.com/watch?v=3JjJuJDgixI
