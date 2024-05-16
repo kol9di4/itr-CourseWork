@@ -28,6 +28,10 @@ class Item
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items')]
     private Collection $tag;
 
+    #[ORM\ManyToOne(inversedBy: 'item')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ItemCollection $itemCollection = null;
+
     public function __construct()
     {
         $this->tag = new ArrayCollection();
@@ -82,6 +86,18 @@ class Item
     public function removeTag(Tag $tag): static
     {
         $this->tag->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getItemCollection(): ?ItemCollection
+    {
+        return $this->itemCollection;
+    }
+
+    public function setItemCollection(?ItemCollection $itemCollection): static
+    {
+        $this->itemCollection = $itemCollection;
 
         return $this;
     }
