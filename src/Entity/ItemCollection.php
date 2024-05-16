@@ -33,11 +33,11 @@ class ItemCollection
      * @var Collection<int, Item>
      */
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'itemCollection')]
-    private Collection $item;
+    private Collection $items;
 
     public function __construct()
     {
-        $this->item = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
 
@@ -97,15 +97,15 @@ class ItemCollection
     /**
      * @return Collection<int, Item>
      */
-    public function getItem(): Collection
+    public function getItems(): Collection
     {
-        return $this->item;
+        return $this->items;
     }
 
     public function addItem(Item $item): static
     {
-        if (!$this->item->contains($item)) {
-            $this->item->add($item);
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
             $item->setItemCollection($this);
         }
 
@@ -114,7 +114,7 @@ class ItemCollection
 
     public function removeItem(Item $item): static
     {
-        if ($this->item->removeElement($item)) {
+        if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
             if ($item->getItemCollection() === $this) {
                 $item->setItemCollection(null);
