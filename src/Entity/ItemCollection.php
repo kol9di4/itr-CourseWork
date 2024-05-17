@@ -35,6 +35,10 @@ class ItemCollection
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'itemCollection')]
     private Collection $items;
 
+    #[ORM\ManyToOne(inversedBy: 'itemCollections')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -111,7 +115,6 @@ class ItemCollection
 
         return $this;
     }
-
     public function removeItem(Item $item): static
     {
         if ($this->items->removeElement($item)) {
@@ -120,6 +123,18 @@ class ItemCollection
                 $item->setItemCollection(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
