@@ -39,9 +39,16 @@ class ItemCollection
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    /**
+     * @var Collection<int, CustomItemAttribute>
+     */
+    #[ORM\OneToMany(targetEntity: CustomItemAttribute::class, mappedBy: 'itemCollection', orphanRemoval: true)]
+    private Collection $customItemAttributes;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
+        $this->customItemAttributes = new ArrayCollection();
     }
 
 
@@ -135,6 +142,36 @@ class ItemCollection
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CustomItemAttribute>
+     */
+    public function getCustomItemAttributes(): Collection
+    {
+        return $this->customItemAttributes;
+    }
+
+    public function addCustomItemAttribute(CustomItemAttribute $customItemAttribute): static
+    {
+        if (!$this->customItemAttributes->contains($customItemAttribute)) {
+            $this->customItemAttributes->add($customItemAttribute);
+            $customItemAttribute->setItemCollection($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomItemAttribute(CustomItemAttribute $customItemAttribute): static
+    {
+        if ($this->customItemAttributes->removeElement($customItemAttribute)) {
+            // set the owning side to null (unless already changed)
+            if ($customItemAttribute->getItemCollection() === $this) {
+                $customItemAttribute->setItemCollection(null);
+            }
+        }
 
         return $this;
     }

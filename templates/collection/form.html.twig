@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Action {{action}}</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.image) }}
+    {{ form_row(form.category) }}
+    {{ form_rest(form) }}
+    <button type="submit">{{ action|capitalize }}</button>
+    {{ form_end(form) }}
+{% endblock %}
