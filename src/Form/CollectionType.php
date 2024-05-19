@@ -20,13 +20,6 @@ class CollectionType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-//            ->add('dateAdd', null, [
-//                'widget' => 'single_text',
-//            ])
-//            ->add('image', EntityType::class, [
-//                'class' => Image::class,
-//                'choice_label' => 'id',
-//            ])
             ->add('image', FileType::class, [
                 'label' => 'Image file',
                 'required' => false,
@@ -51,6 +44,7 @@ class CollectionType extends AbstractType
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'by_reference' => false,
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,

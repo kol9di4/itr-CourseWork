@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ItemCollectionRepository;
 use App\Service\FileUploader;
 use App\Entity\ItemCollection;
 use App\Entity\Image;
@@ -19,10 +20,12 @@ class CollectionController extends AbstractController
     ){}
 
     #[Route('/collections', name: 'app_collection')]
-    public function index(): Response
+    public function index(ItemCollectionRepository $itemCollectionRepository): Response
     {
+        $collections = $itemCollectionRepository->findAll();
         return $this->render('collection/index.html.twig', [
             'controller_name' => 'CollectionController',
+            'collections' => $collections,
         ]);
     }
 
@@ -30,12 +33,38 @@ class CollectionController extends AbstractController
     public function create(Request $request, FileUploader $fileUploader): Response
     {
         $itemCollection = new ItemCollection();
+        $itemCollection->setDateAdd(new \DateTime());
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $this->entityManager->persist($imageFile);
+                $imageFileName = $fileUploader->upload($imageFile);
+                $image = new Image();
+                $image->setPath($imageFileName);
+                $itemCollection->setImage($image);
+                $this->entityManager->persist($image);
+                $this->entityManager->persist($itemCollection);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Collection created.');
+            }
+        }
+
+        return $this->render('collection/form.html.twig', [
+            'action' => 'create',
+            'form'  => $form
+        ]);
+    }
+
+    #[Route('/collections/{id}/update', name: 'app_collection_update', methods: ['GET', 'POST'])]
+    public function update(Request $request, FileUploader $fileUploader, ItemCollection $itemCollection): Response
+    {
+
+        $form = $this->createForm(CollectionType::class, $itemCollection);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
                 $image = new Image();
                 $image->setPath($imageFileName);
@@ -44,13 +73,13 @@ class CollectionController extends AbstractController
             }
             $this->entityManager->persist($itemCollection);
             $this->entityManager->flush();
-
-            $this->addFlash('success', 'Collection created.');
+            $this->addFlash('success', 'Collection updated.');
         }
 
         return $this->render('collection/form.html.twig', [
-            'action' => 'create',
-            'form'  => $form
+            'action' => 'update',
+            'form'  => $form,
+            'collection' => $itemCollection,
         ]);
     }
 }

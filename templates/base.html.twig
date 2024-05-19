@@ -14,8 +14,15 @@
     </head>
     <body>
         <div class="flash-messages">
-            {% for message in app.flashes('succsess') %}
+            {% for message in app.flashes('success') %}
                 <div class="alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             {% endfor %}
         </div>
 

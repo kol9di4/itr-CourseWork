@@ -27,6 +27,7 @@ class ItemCollection
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
     private ?Image $image = null;
 
     /**
@@ -42,7 +43,7 @@ class ItemCollection
     /**
      * @var Collection<int, CustomItemAttribute>
      */
-    #[ORM\OneToMany(targetEntity: CustomItemAttribute::class, mappedBy: 'itemCollection', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CustomItemAttribute::class, mappedBy: 'itemCollection', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $customItemAttributes;
 
     public function __construct()
