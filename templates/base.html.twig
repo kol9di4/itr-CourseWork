@@ -9,9 +9,16 @@
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+            <script type="application/javascript" src="{{ asset('js/collection-form-helper.js') }}"></script>
         {% endblock %}
     </head>
     <body>
+        <div class="flash-messages">
+            {% for message in app.flashes('succsess') %}
+                <div class="alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+
         {% block body %}{% endblock %}
     </body>
 </html>
