@@ -20,30 +20,35 @@ class ItemController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
     ){}
-    #[Route('/collections/{id}/items/create', name: 'app_item')]
+    #[Route('/collections/{id}/items/create', name: 'app_item', methods: ['GET','POST'])]
     public function index(Request $request,ItemCollection $itemCollection): Response
     {
+
         $form = $this->createForm(ItemType::class);
         $customAttributes = $itemCollection->getCustomItemAttributes()->getValues();
-//        foreach ($customAttributes as $customAttributeValue) {
-//            if ($customAttributeValue->getType() === 'String') {
-//                $form
-//                    ->add('itemAttributeStringFields', TextType::class, [
-//                        'label' => $customAttributeValue->getName(),
-//                    ]);
-//            }
-//            if ($customAttributeValue->getType() === 'Integer') {
-//                $form
-//                    ->add('itemAttributeIntegerFields', IntegerType::class, [
-//                        'label' => $customAttributeValue->getName(),
-//                    ]);
-//            }
-//        }
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            dd($request->request);
+        foreach ($customAttributes as $customAttributeValue) {
+            $id = $customAttributeValue->getId();
+            if ($customAttributeValue->getType() === 'String') {
+                $form
+                    ->add($id, TextType::class, [
+                        'label' => $customAttributeValue->getName(),
+                    ]);
+            }
+            if ($customAttributeValue->getType() === 'Integer') {
+                $form
+                    ->add($id, IntegerType::class, [
+                        'label' => $customAttributeValue->getName(),
+                        'row_attr' => ['data-id' => $id, 'data-type'=> $customAttributeValue->getType()],
+                    ]);
+            }
         }
+        if($request->isMethod('POST')) {
+            dd($request->request->all()['item']);
+        }
+
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//        }
 //        if ($form->isSubmitted() && $form->isValid()) {
 //            $item = new Item();
 //            $item->setItemCollection($itemCollection);

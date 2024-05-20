@@ -29,14 +29,7 @@ class CollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/collections/{id}', name: 'app_collection_view')]
-    public function view(ItemCollection $itemCollection): Response
-    {
-        return $this->render('collection/vew.html.twig', [
-            'controller_name' => 'View',
-            'itemCollection' => $itemCollection,
-        ]);
-    }
+
 
     #[Route('/collections/create', name: 'app_collection_create', methods: ['GET', 'POST'])]
     public function create(Request $request, FileUploader $fileUploader): Response
@@ -65,6 +58,14 @@ class CollectionController extends AbstractController
         return $this->render('collection/form.html.twig', [
             'action' => 'create',
             'form'  => $form
+        ]);
+    }
+    #[Route('/collections/{id}', name: 'app_collection_view')]
+    public function view(ItemCollection $itemCollection): Response
+    {
+        return $this->render('collection/vew.html.twig', [
+            'controller_name' => 'View',
+            'itemCollection' => $itemCollection,
         ]);
     }
 

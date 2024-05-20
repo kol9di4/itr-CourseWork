@@ -2,8 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Item;
-use App\Entity\ItemCollection;
 use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,15 +19,13 @@ class ItemType extends AbstractType
                 'choice_label' => 'id',
                 'multiple' => true,
             ])
-            ->add('collection', EntityType::class, [])
-            ->add('tags', EntityType::class, [])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Item::class,
-        ]);
-    }
+//    public function configureOptions(OptionsResolver $resolver): void
+//    {
+//        $resolver->setDefaults([
+////            'data_class' => Item::class,
+//        ]);
+//    }
 }
