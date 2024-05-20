@@ -9,9 +9,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class MainController extends AbstractController
 {
-//    #[Route('/', name: 'app_collection')]
-//    public function index(): Response
-//    {
-//        return $this->redirectToRoute('app_collection');
-//    }
+    #[Route('/', name: 'app')]
+    public function index(): Response
+    {
+        return $this->redirectToRoute('app_collection');
+    }
 }

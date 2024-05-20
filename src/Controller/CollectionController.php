@@ -29,6 +29,15 @@ class CollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/collections/{id}', name: 'app_collection_view')]
+    public function view(ItemCollection $itemCollection): Response
+    {
+        return $this->render('collection/vew.html.twig', [
+            'controller_name' => 'View',
+            'itemCollection' => $itemCollection,
+        ]);
+    }
+
     #[Route('/collections/create', name: 'app_collection_create', methods: ['GET', 'POST'])]
     public function create(Request $request, FileUploader $fileUploader): Response
     {
@@ -42,11 +51,14 @@ class CollectionController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $image = new Image();
                 $image->setPath($imageFileName);
+                $user = $this->getUser();
                 $itemCollection->setImage($image);
+                $itemCollection->setUser($user);
                 $this->entityManager->persist($image);
                 $this->entityManager->persist($itemCollection);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Collection created.');
+                return $this->redirectToRoute('app_collection');
             }
         }
 
@@ -59,7 +71,13 @@ class CollectionController extends AbstractController
     #[Route('/collections/{id}/update', name: 'app_collection_update', methods: ['GET', 'POST'])]
     public function update(Request $request, FileUploader $fileUploader, ItemCollection $itemCollection): Response
     {
-
+        $user = $this->getUser();
+        $isMatched = $user->getId() === $itemCollection->getUser()->getId();
+        $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
+        if(!($isMatched || $isSetRole)) {
+            $this->addFlash('error', 'No permissions to edit.');
+            return $this->redirectToRoute('app_collection',['id' => $itemCollection->getId()]);
+        }
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -74,6 +92,7 @@ class CollectionController extends AbstractController
             $this->entityManager->persist($itemCollection);
             $this->entityManager->flush();
             $this->addFlash('success', 'Collection updated.');
+            return $this->redirectToRoute('app_collection',['id' => $itemCollection->getId()]);
         }
 
         return $this->render('collection/form.html.twig', [
