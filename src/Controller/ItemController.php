@@ -25,20 +25,20 @@ class ItemController extends AbstractController
     {
         $form = $this->createForm(ItemType::class);
         $customAttributes = $itemCollection->getCustomItemAttributes()->getValues();
-        foreach ($customAttributes as $customAttributeValue) {
-            if ($customAttributeValue->getType() === 'String') {
-                $form
-                    ->add('itemAttributeStringFields', TextType::class, [
-                        'label' => $customAttributeValue->getName(),
-                    ]);
-            }
-            if ($customAttributeValue->getType() === 'Integer') {
-                $form
-                    ->add('itemAttributeIntegerFields', IntegerType::class, [
-                        'label' => $customAttributeValue->getName(),
-                    ]);
-            }
-        }
+//        foreach ($customAttributes as $customAttributeValue) {
+//            if ($customAttributeValue->getType() === 'String') {
+//                $form
+//                    ->add('itemAttributeStringFields', TextType::class, [
+//                        'label' => $customAttributeValue->getName(),
+//                    ]);
+//            }
+//            if ($customAttributeValue->getType() === 'Integer') {
+//                $form
+//                    ->add('itemAttributeIntegerFields', IntegerType::class, [
+//                        'label' => $customAttributeValue->getName(),
+//                    ]);
+//            }
+//        }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
