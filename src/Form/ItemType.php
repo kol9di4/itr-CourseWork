@@ -21,6 +21,8 @@ class ItemType extends AbstractType
                 'choice_label' => 'id',
                 'multiple' => true,
             ])
+            ->add('collection', EntityType::class, [])
+            ->add('tags', EntityType::class, [])
         ;
     }
 
