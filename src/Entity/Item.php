@@ -44,11 +44,25 @@ class Item
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'item', orphanRemoval: true)]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, ItemAttributeStringField>
+     */
+    #[ORM\OneToMany(targetEntity: ItemAttributeStringField::class, mappedBy: 'item', orphanRemoval: true)]
+    private Collection $itemAttributeStringFields;
+
+    /**
+     * @var Collection<int, ItemAttributeIntegerField>
+     */
+    #[ORM\OneToMany(targetEntity: ItemAttributeIntegerField::class, mappedBy: 'item', orphanRemoval: true)]
+    private Collection $itemAttributeIntegerFields;
+
     public function __construct()
     {
         $this->tag = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->itemAttributeStringFields = new ArrayCollection();
+        $this->itemAttributeIntegerFields = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,6 +184,66 @@ class Item
             // set the owning side to null (unless already changed)
             if ($comment->getItem() === $this) {
                 $comment->setItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ItemAttributeStringField>
+     */
+    public function getItemAttributeStringFields(): Collection
+    {
+        return $this->itemAttributeStringFields;
+    }
+
+    public function addItemAttributeStringField(ItemAttributeStringField $itemAttributeStringField): static
+    {
+        if (!$this->itemAttributeStringFields->contains($itemAttributeStringField)) {
+            $this->itemAttributeStringFields->add($itemAttributeStringField);
+            $itemAttributeStringField->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemAttributeStringField(ItemAttributeStringField $itemAttributeStringField): static
+    {
+        if ($this->itemAttributeStringFields->removeElement($itemAttributeStringField)) {
+            // set the owning side to null (unless already changed)
+            if ($itemAttributeStringField->getItem() === $this) {
+                $itemAttributeStringField->setItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ItemAttributeIntegerField>
+     */
+    public function getItemAttributeIntegerFields(): Collection
+    {
+        return $this->itemAttributeIntegerFields;
+    }
+
+    public function addItemAttributeIntegerField(ItemAttributeIntegerField $itemAttributeIntegerField): static
+    {
+        if (!$this->itemAttributeIntegerFields->contains($itemAttributeIntegerField)) {
+            $this->itemAttributeIntegerFields->add($itemAttributeIntegerField);
+            $itemAttributeIntegerField->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemAttributeIntegerField(ItemAttributeIntegerField $itemAttributeIntegerField): static
+    {
+        if ($this->itemAttributeIntegerFields->removeElement($itemAttributeIntegerField)) {
+            // set the owning side to null (unless already changed)
+            if ($itemAttributeIntegerField->getItem() === $this) {
+                $itemAttributeIntegerField->setItem(null);
             }
         }
 
