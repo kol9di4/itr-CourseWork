@@ -6,7 +6,7 @@ use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType as SymfonyCollectionType;
 
 class ItemType extends AbstractType
 {
@@ -19,13 +19,13 @@ class ItemType extends AbstractType
                 'choice_label' => 'id',
                 'multiple' => true,
             ])
-            ->add('itemAttributeIntegerFields',\Symfony\Component\Form\Extension\Core\Type\CollectionType::class, [
+            ->add('itemAttributeIntegerFields',SymfonyCollectionType::class, [
                     'entry_type' => ItemAttributeIntegerType::class,
                     'entry_options' => ['label' => false],
                     'label' => false,
                     'by_reference' => false,
                 ])
-            ->add('itemAttributeStringFields',\Symfony\Component\Form\Extension\Core\Type\CollectionType::class, [
+            ->add('itemAttributeStringFields',SymfonyCollectionType::class, [
                 'entry_type' => ItemAttributeStringType::class,
                 'entry_options' => ['label' => false],
                 'label' => false,

@@ -7,6 +7,8 @@ use App\Entity\ItemAttributeIntegerField;
 use App\Entity\ItemAttributeStringField;
 use App\Entity\ItemCollection;
 use App\Form\ItemType;
+use App\Repository\ItemCollectionRepository;
+use App\Repository\ItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -21,16 +23,9 @@ class ItemController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private ItemCollectionRepository $itemCollectionRepository,
+        private ItemRepository $itemRepository,
     ){}
-    #[Route('/collections/{id}/items', name: 'app_item')]
-    public function items(Request $request,ItemCollection $itemCollection): Response
-    {
-        $items = $itemCollection->getItems();
-        return $this->render('item/index.html.twig', [
-            'controller_name' => 'ItemController',
-            'items' => $items,
-        ]);
-    }
 
     #[Route('/collections/{id}/items/create', name: 'app_item_create', methods: ['GET','POST'])]
     public function index(Request $request,ItemCollection $itemCollection): Response
@@ -54,31 +49,54 @@ class ItemController extends AbstractController
         }
         $form = $this->createForm(ItemType::class, $item);
 
-//        foreach ($customAttributes as $customAttributeValue) {
-//            $id = $customAttributeValue->getId();
-//            if ($customAttributeValue->getType() === 'String') {
-//                $form
-//                    ->add(''.$id, TextType::class, [
-//                        'label' => $customAttributeValue->getName(),
-//                        'row_attr' => ['data-id' => $id, 'data-type'=> $customAttributeValue->getType()],
-//                    ]);
-//            }
-//            if ($customAttributeValue->getType() === 'Integer') {
-//                $form
-//                    ->add(''.$id, IntegerType::class, [
-//                        'label' => $customAttributeValue->getName(),
-//                        'row_attr' => ['data-id' => $id, 'data-type'=> $customAttributeValue->getType()],
-//                    ]);
-//            }
-//        }
-//        if($request->isMethod('POST')) {
-//            dd($request->request->all()['item']);
-//        }
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $item->setItemCollection($itemCollection);
             $item->setDateAdd(new \DateTime());
+            $this->entityManager->persist($item);
+            $this->entityManager->flush();
+        }
+
+        return $this->render('item/form.html.twig', [
+            'controller_name' => 'ItemController',
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/collections/{idCollection}/items', name: 'app_items')]
+    public function items(Request $request, int $idCollection): Response
+    {
+        return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
+    }
+
+    #[Route('/collections/{idCollection}/items/{idItem}', name: 'app_item')]
+    public function view(Request $request, int $idCollection, int $idItem): Response
+    {
+        $itemCollection = $this->itemCollectionRepository->findOneBy(['id'=>$idCollection]);
+        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
+        if ($item->getItemCollection() !== $itemCollection) {
+            $this->addFlash('error', 'Item not found');
+            return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
+        }
+        return $this->render('item/view.html.twig', [
+            'controller_name' => 'ItemController',
+            'item' => $item,
+        ]);
+    }
+
+    #[Route('/collections/{idCollection}/items/{idItem}/update', name: 'app_item_update', methods: ['GET','POST'])]
+    public function update(Request $request, int $idCollection, int $idItem): Response
+    {
+        $itemCollection = $this->itemCollectionRepository->findOneBy(['id'=>$idCollection]);
+        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
+        if ($item->getItemCollection() !== $itemCollection) {
+            $this->addFlash('error', 'Item not found');
+            return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
+        }
+
+        $form = $this->createForm(ItemType::class, $item);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($item);
             $this->entityManager->flush();
         }

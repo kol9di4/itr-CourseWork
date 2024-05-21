@@ -14,5 +14,16 @@
             <h4> {{ itemCollection.dateAdd|date('Y-m-d') }} </h4>
             <img src="{{ asset('uploads/images/' ~ itemCollection.image.path) }}" width="100" height="100">
             <hr>
+            {% for item in itemCollection.getItems %}
+                <h1>{{ item.getName }}</h1>
+                <h5>{{ item.getDateAdd|date("d/m/Y") }}</h5>
+                {% for attributeString in item.getItemAttributeStringFields %}
+                    <h6>{{ attributeString.getCustomItemAttribute.getName}} : {{ attributeString.getValue }}</h6>
+                {% endfor %}
+                {% for attributeInteger in item.getItemAttributeIntegerFields %}
+                    <h6>{{ attributeInteger.getCustomItemAttribute.getName}} : {{ attributeInteger.getValue }}</h6>
+                {% endfor %}
+
+            {% endfor %}
     </div>
 {% endblock %}
