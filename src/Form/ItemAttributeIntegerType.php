@@ -9,19 +9,22 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ItemAttributeIntegerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('value')
-            ->add('customItemAttribute', EntityType::class, [
-                'class' => CustomItemAttribute::class,
-                'choice_label' => 'name',
-            ])
-        ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $customItemAttributeName = $event->getData()->getCustomItemAttribute()->getName();
+            $form = $event->getForm();
+            $form
+                ->add('value', NumberType::class, [
+                    'label' => $customItemAttributeName,
+                ]);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

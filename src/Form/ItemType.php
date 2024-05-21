@@ -27,6 +27,8 @@ class ItemType extends AbstractType
                 ])
             ->add('itemAttributeStringFields',\Symfony\Component\Form\Extension\Core\Type\CollectionType::class, [
                 'entry_type' => ItemAttributeStringType::class,
+                'entry_options' => ['label' => false],
+                'label' => false,
                 'by_reference' => false,
             ])
         ;
