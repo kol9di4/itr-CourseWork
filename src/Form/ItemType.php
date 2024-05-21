@@ -19,6 +19,14 @@ class ItemType extends AbstractType
                 'choice_label' => 'id',
                 'multiple' => true,
             ])
+            ->add('itemAttributeIntegerFields',\Symfony\Component\Form\Extension\Core\Type\CollectionType::class, [
+                    'entry_type' => ItemAttributeIntegerType::class,
+                    'by_reference' => false,
+                ])
+            ->add('itemAttributeStringFields',\Symfony\Component\Form\Extension\Core\Type\CollectionType::class, [
+                'entry_type' => ItemAttributeStringType::class,
+                'by_reference' => false,
+            ])
         ;
     }
 

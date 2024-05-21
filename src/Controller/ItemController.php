@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Item;
+use App\Entity\ItemAttributeIntegerField;
+use App\Entity\ItemAttributeStringField;
 use App\Entity\ItemCollection;
 use App\Form\ItemType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,39 +25,53 @@ class ItemController extends AbstractController
     #[Route('/collections/{id}/items/create', name: 'app_item', methods: ['GET','POST'])]
     public function index(Request $request,ItemCollection $itemCollection): Response
     {
-
-        $form = $this->createForm(ItemType::class);
+        $item = new Item();
+        $item->setName('qwe');
         $customAttributes = $itemCollection->getCustomItemAttributes()->getValues();
         foreach ($customAttributes as $customAttributeValue) {
-            $id = $customAttributeValue->getId();
-            if ($customAttributeValue->getType() === 'String') {
-                $form
-                    ->add($id, TextType::class, [
-                        'label' => $customAttributeValue->getName(),
-                    ]);
-            }
             if ($customAttributeValue->getType() === 'Integer') {
-                $form
-                    ->add($id, IntegerType::class, [
-                        'label' => $customAttributeValue->getName(),
-                        'row_attr' => ['data-id' => $id, 'data-type'=> $customAttributeValue->getType()],
-                    ]);
+                $itemAttributeInteger = new ItemAttributeIntegerField();
+                $itemAttributeInteger->setCustomItemAttribute($customAttributeValue);
+                $item->addItemAttributeIntegerField($itemAttributeInteger);
+                $this->entityManager->persist($itemAttributeInteger);
+            }
+            if ($customAttributeValue->getType() === 'String') {
+                $itemAttributeString = new ItemAttributeStringField();
+                $itemAttributeString->setCustomItemAttribute($customAttributeValue);
+                $item->addItemAttributeStringField($itemAttributeString);
+                $this->entityManager->persist($itemAttributeString);
             }
         }
-        if($request->isMethod('POST')) {
-            dd($request->request->all()['item']);
-        }
+        $form = $this->createForm(ItemType::class, $item);
 
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
+//        foreach ($customAttributes as $customAttributeValue) {
+//            $id = $customAttributeValue->getId();
+//            if ($customAttributeValue->getType() === 'String') {
+//                $form
+//                    ->add(''.$id, TextType::class, [
+//                        'label' => $customAttributeValue->getName(),
+//                        'row_attr' => ['data-id' => $id, 'data-type'=> $customAttributeValue->getType()],
+//                    ]);
+//            }
+//            if ($customAttributeValue->getType() === 'Integer') {
+//                $form
+//                    ->add(''.$id, IntegerType::class, [
+//                        'label' => $customAttributeValue->getName(),
+//                        'row_attr' => ['data-id' => $id, 'data-type'=> $customAttributeValue->getType()],
+//                    ]);
+//            }
 //        }
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $item = new Item();
-//            $item->setItemCollection($itemCollection);
-//            $item->setDateAdd(new \DateTime());
-//            $this->entityManager->persist($item);
-//            $this->entityManager->flush();
+//        if($request->isMethod('POST')) {
+//            dd($request->request->all()['item']);
 //        }
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $item->setItemCollection($itemCollection);
+            $item->setDateAdd(new \DateTime());
+            $this->entityManager->persist($item);
+            $this->entityManager->flush();
+        }
 
         return $this->render('item/index.html.twig', [
             'controller_name' => 'ItemController',

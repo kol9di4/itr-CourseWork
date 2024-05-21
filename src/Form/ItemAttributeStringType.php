@@ -4,13 +4,13 @@ namespace App\Form;
 
 use App\Entity\CustomItemAttribute;
 use App\Entity\Item;
-use App\Entity\ItemAttributeIntegerField;
+use App\Entity\ItemAttributeStringField;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ItemAttributeIntegerType extends AbstractType
+class ItemAttributeStringType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -26,7 +26,7 @@ class ItemAttributeIntegerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ItemAttributeIntegerField::class,
+            'data_class' => ItemAttributeStringField::class,
         ]);
     }
 }
