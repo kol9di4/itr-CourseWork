@@ -22,7 +22,17 @@ class ItemController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
     ){}
-    #[Route('/collections/{id}/items/create', name: 'app_item', methods: ['GET','POST'])]
+    #[Route('/collections/{id}/items', name: 'app_item')]
+    public function items(Request $request,ItemCollection $itemCollection): Response
+    {
+        $items = $itemCollection->getItems();
+        return $this->render('item/index.html.twig', [
+            'controller_name' => 'ItemController',
+            'items' => $items,
+        ]);
+    }
+
+    #[Route('/collections/{id}/items/create', name: 'app_item_create', methods: ['GET','POST'])]
     public function index(Request $request,ItemCollection $itemCollection): Response
     {
         $item = new Item();
@@ -73,7 +83,7 @@ class ItemController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->render('item/index.html.twig', [
+        return $this->render('item/form.html.twig', [
             'controller_name' => 'ItemController',
             'form' => $form->createView(),
         ]);

@@ -16,9 +16,7 @@ class ItemAttributeIntegerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('value', NumberType::class, [
-//                'label' => 'data_class'
-            ])
+            ->add('value')
             ->add('customItemAttribute', EntityType::class, [
                 'class' => CustomItemAttribute::class,
                 'choice_label' => 'name',
