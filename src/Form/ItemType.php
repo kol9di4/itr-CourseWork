@@ -31,6 +31,24 @@ class ItemType extends AbstractType
                 'label' => false,
                 'by_reference' => false,
             ])
+            ->add('itemAttributeTextFields',SymfonyCollectionType::class, [
+                'entry_type' => ItemAttributeTextType::class,
+                'entry_options' => ['label' => false],
+                'label' => false,
+                'by_reference' => false,
+            ])
+            ->add('itemAttributeBooleanFields',SymfonyCollectionType::class, [
+                'entry_type' => ItemAttributeBooleanType::class,
+                'entry_options' => ['label' => false],
+                'label' => false,
+                'by_reference' => false,
+            ])
+            ->add('itemAttributeDateFields',SymfonyCollectionType::class, [
+                'entry_type' => ItemAttributeDateType::class,
+                'entry_options' => ['label' => false],
+                'label' => false,
+                'by_reference' => false,
+            ])
         ;
     }
 

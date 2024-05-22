@@ -73,11 +73,11 @@ class CollectionController extends AbstractController
     public function update(Request $request, FileUploader $fileUploader, ItemCollection $itemCollection): Response
     {
         $user = $this->getUser();
-        $isMatched = $user->getId() === $itemCollection->getUser()->getId();
+        $isUserMatched = $user->getId() === $itemCollection->getUser()->getId();
         $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
-        if(!($isMatched || $isSetRole)) {
+        if(!($isUserMatched || $isSetRole)) {
             $this->addFlash('error', 'No permissions to edit.');
-            return $this->redirectToRoute('app_collection',['id' => $itemCollection->getId()]);
+            return $this->redirectToRoute('app_collection_view',['id' => $itemCollection->getId()]);
         }
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);

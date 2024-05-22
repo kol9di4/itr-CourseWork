@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Item;
+use App\Entity\ItemAttributeBooleanField;
+use App\Entity\ItemAttributeDateField;
 use App\Entity\ItemAttributeIntegerField;
 use App\Entity\ItemAttributeStringField;
+use App\Entity\ItemAttributeTextField;
 use App\Entity\ItemCollection;
 use App\Form\ItemType;
 use App\Repository\ItemCollectionRepository;
@@ -46,6 +49,24 @@ class ItemController extends AbstractController
                 $item->addItemAttributeStringField($itemAttributeString);
                 $this->entityManager->persist($itemAttributeString);
             }
+            if ($customAttributeValue->getType() === 'Text') {
+                $itemAttributeText = new ItemAttributeTextField();
+                $itemAttributeText->setCustomItemAttribute($customAttributeValue);
+                $item->addItemAttributeTextField($itemAttributeText);
+                $this->entityManager->persist($itemAttributeText);
+            }
+            if ($customAttributeValue->getType() === 'Boolean') {
+                $itemAttributeBoolean = new ItemAttributeBooleanField();
+                $itemAttributeBoolean->setCustomItemAttribute($customAttributeValue);
+                $item->addItemAttributeBooleanField($itemAttributeBoolean);
+                $this->entityManager->persist($itemAttributeBoolean);
+            }
+            if ($customAttributeValue->getType() === 'Date') {
+                $itemAttributeDate = new ItemAttributeDateField();
+                $itemAttributeDate->setCustomItemAttribute($customAttributeValue);
+                $item->addItemAttributeDateField($itemAttributeDate);
+                $this->entityManager->persist($itemAttributeDate);
+            }
         }
         $form = $this->createForm(ItemType::class, $item);
 
@@ -58,7 +79,7 @@ class ItemController extends AbstractController
         }
 
         return $this->render('item/form.html.twig', [
-            'controller_name' => 'ItemController',
+            'action' => 'create',
             'form' => $form->createView(),
         ]);
     }
@@ -79,7 +100,6 @@ class ItemController extends AbstractController
             return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
         }
         return $this->render('item/view.html.twig', [
-            'controller_name' => 'ItemController',
             'item' => $item,
         ]);
     }
@@ -102,7 +122,7 @@ class ItemController extends AbstractController
         }
 
         return $this->render('item/form.html.twig', [
-            'controller_name' => 'ItemController',
+            'action' => 'update',
             'form' => $form->createView(),
         ]);
     }

@@ -56,6 +56,24 @@ class Item
     #[ORM\OneToMany(targetEntity: ItemAttributeIntegerField::class, mappedBy: 'item', orphanRemoval: true)]
     private Collection $itemAttributeIntegerFields;
 
+    /**
+     * @var Collection<int, ItemAttributeTextField>
+     */
+    #[ORM\OneToMany(targetEntity: ItemAttributeTextField::class, mappedBy: 'item', orphanRemoval: true)]
+    private Collection $itemAttributeTextFields;
+
+    /**
+     * @var Collection<int, ItemAttributeBooleanField>
+     */
+    #[ORM\OneToMany(targetEntity: ItemAttributeBooleanField::class, mappedBy: 'item', orphanRemoval: true)]
+    private Collection $itemAttributeBooleanFields;
+
+    /**
+     * @var Collection<int, ItemAttributeDateField>
+     */
+    #[ORM\OneToMany(targetEntity: ItemAttributeDateField::class, mappedBy: 'item', orphanRemoval: true)]
+    private Collection $itemAttributeDateFields;
+
     public function __construct()
     {
         $this->tag = new ArrayCollection();
@@ -63,6 +81,9 @@ class Item
         $this->comments = new ArrayCollection();
         $this->itemAttributeStringFields = new ArrayCollection();
         $this->itemAttributeIntegerFields = new ArrayCollection();
+        $this->itemAttributeTextFields = new ArrayCollection();
+        $this->itemAttributeBooleanFields = new ArrayCollection();
+        $this->itemAttributeDateFields = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -244,6 +265,96 @@ class Item
             // set the owning side to null (unless already changed)
             if ($itemAttributeIntegerField->getItem() === $this) {
                 $itemAttributeIntegerField->setItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ItemAttributeTextField>
+     */
+    public function getItemAttributeTextFields(): Collection
+    {
+        return $this->itemAttributeTextFields;
+    }
+
+    public function addItemAttributeTextField(ItemAttributeTextField $itemAttributeTextField): static
+    {
+        if (!$this->itemAttributeTextFields->contains($itemAttributeTextField)) {
+            $this->itemAttributeTextFields->add($itemAttributeTextField);
+            $itemAttributeTextField->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemAttributeTextField(ItemAttributeTextField $itemAttributeTextField): static
+    {
+        if ($this->itemAttributeTextFields->removeElement($itemAttributeTextField)) {
+            // set the owning side to null (unless already changed)
+            if ($itemAttributeTextField->getItem() === $this) {
+                $itemAttributeTextField->setItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ItemAttributeBooleanField>
+     */
+    public function getItemAttributeBooleanFields(): Collection
+    {
+        return $this->itemAttributeBooleanFields;
+    }
+
+    public function addItemAttributeBooleanField(ItemAttributeBooleanField $itemAttributeBooleanField): static
+    {
+        if (!$this->itemAttributeBooleanFields->contains($itemAttributeBooleanField)) {
+            $this->itemAttributeBooleanFields->add($itemAttributeBooleanField);
+            $itemAttributeBooleanField->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemAttributeBooleanField(ItemAttributeBooleanField $itemAttributeBooleanField): static
+    {
+        if ($this->itemAttributeBooleanFields->removeElement($itemAttributeBooleanField)) {
+            // set the owning side to null (unless already changed)
+            if ($itemAttributeBooleanField->getItem() === $this) {
+                $itemAttributeBooleanField->setItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ItemAttributeDateField>
+     */
+    public function getItemAttributeDateFields(): Collection
+    {
+        return $this->itemAttributeDateFields;
+    }
+
+    public function addItemAttributeDateField(ItemAttributeDateField $itemAttributeDateField): static
+    {
+        if (!$this->itemAttributeDateFields->contains($itemAttributeDateField)) {
+            $this->itemAttributeDateFields->add($itemAttributeDateField);
+            $itemAttributeDateField->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemAttributeDateField(ItemAttributeDateField $itemAttributeDateField): static
+    {
+        if ($this->itemAttributeDateFields->removeElement($itemAttributeDateField)) {
+            // set the owning side to null (unless already changed)
+            if ($itemAttributeDateField->getItem() === $this) {
+                $itemAttributeDateField->setItem(null);
             }
         }
 

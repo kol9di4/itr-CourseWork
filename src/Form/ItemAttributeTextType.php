@@ -2,15 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\ItemAttributeIntegerField;
+use App\Entity\ItemAttributeTextField;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ItemAttributeIntegerType extends AbstractType
+class ItemAttributeTextType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -18,7 +18,7 @@ class ItemAttributeIntegerType extends AbstractType
             $customItemAttributeName = $event->getData()->getCustomItemAttribute()->getName();
             $form = $event->getForm();
             $form
-                ->add('value', IntegerType::class, [
+                ->add('value', TextareaType::class, [
                     'label' => $customItemAttributeName,
                 ]);
         });
@@ -27,7 +27,7 @@ class ItemAttributeIntegerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ItemAttributeIntegerField::class,
+            'data_class' => ItemAttributeTextField::class,
         ]);
     }
 }
