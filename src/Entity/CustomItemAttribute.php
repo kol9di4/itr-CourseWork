@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use App\Enum\CustomAttributeType;
 use App\Repository\CustomItemAttributeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+
 
 #[ORM\Entity(repositoryClass: CustomItemAttributeRepository::class)]
 class CustomItemAttribute
@@ -16,10 +17,14 @@ class CustomItemAttribute
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min:3,max: 255)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
+//    #[ORM\Column(length: 10, enumType: CustomAttributeType::class)]
+//    private ?CustomAttributeType $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'customItemAttributes')]
     #[ORM\JoinColumn(nullable: false)]

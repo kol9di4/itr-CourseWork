@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -13,7 +15,13 @@ class ItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(min: 3,max: 255),
+                ],
+                'empty_data' => '',
+            ])
             ->add('tag', EntityType::class, [
                 'class' => Tag::class,
                 'choice_label' => 'id',

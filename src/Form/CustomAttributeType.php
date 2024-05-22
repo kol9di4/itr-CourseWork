@@ -18,9 +18,9 @@ class CustomAttributeType extends AbstractType
     {
         $builder
             ->add('name')
-//            ->add('type',enumType::class,[
-//                'class' => CustomAttributeTypeEnum::class
-//            ])
+            ->add('type',enumType::class,[
+                'class' => CustomAttributeTypeEnum::class
+            ])
             ->add('type',ChoiceType::class, [
                 'choices'  => [
                     'Integer' => 'Integer',
@@ -30,6 +30,10 @@ class CustomAttributeType extends AbstractType
                     'Date' => 'Date',
                 ],
             ])
+//            enumType
+//        ->add('type', EnumType::class, [
+//                'class' => \App\Enum\CustomAttributeType::class
+//            ])
         ;
     }
 

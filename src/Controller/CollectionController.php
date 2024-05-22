@@ -90,7 +90,7 @@ class CollectionController extends AbstractController
                 $itemCollection->setImage($image);
                 $this->entityManager->persist($image);
             }
-            $this->entityManager->persist($itemCollection);
+
             $this->entityManager->flush();
             $this->addFlash('success', 'Collection updated.');
             return $this->redirectToRoute('app_collection',['id' => $itemCollection->getId()]);

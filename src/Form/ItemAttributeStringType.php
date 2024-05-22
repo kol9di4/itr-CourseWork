@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\ItemAttributeStringField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,6 +21,10 @@ class ItemAttributeStringType extends AbstractType
             $form
                 ->add('value', TextType::class, [
                     'label' => $customItemAttributeName,
+//                    'constraints' => [
+//                        new Assert\NotBlank(),
+//                        new Assert\Length(['min' => 3, 'max' => 255]),
+//                    ]
                 ]);
         });
     }

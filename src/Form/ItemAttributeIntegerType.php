@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\ItemAttributeIntegerField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -20,6 +21,10 @@ class ItemAttributeIntegerType extends AbstractType
             $form
                 ->add('value', IntegerType::class, [
                     'label' => $customItemAttributeName,
+//                    'constraints' => [
+//                        new Assert\NotBlank(),
+//                        new Assert\Range(['min' => -2147483648, 'max' => 2147483647]),
+//                    ]
                 ]);
         });
     }

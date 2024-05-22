@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Type;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ItemAttributeDateFieldRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +17,7 @@ class ItemAttributeDateField
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank()]
     private ?\DateTimeInterface $value = null;
 
     #[ORM\ManyToOne(inversedBy: 'itemAttributeDateFields')]

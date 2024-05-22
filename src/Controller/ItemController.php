@@ -34,7 +34,6 @@ class ItemController extends AbstractController
     public function index(Request $request,ItemCollection $itemCollection): Response
     {
         $item = new Item();
-        $item->setName('qwe');
         $customAttributes = $itemCollection->getCustomItemAttributes()->getValues();
         foreach ($customAttributes as $customAttributeValue) {
             if ($customAttributeValue->getType() === 'Integer') {
@@ -64,16 +63,16 @@ class ItemController extends AbstractController
             if ($customAttributeValue->getType() === 'Date') {
                 $itemAttributeDate = new ItemAttributeDateField();
                 $itemAttributeDate->setCustomItemAttribute($customAttributeValue);
+                $itemAttributeDate->setValue(new \DateTime());
                 $item->addItemAttributeDateField($itemAttributeDate);
                 $this->entityManager->persist($itemAttributeDate);
             }
         }
         $form = $this->createForm(ItemType::class, $item);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $item->setItemCollection($itemCollection);
             $item->setDateAdd(new \DateTime());
+            $item->setItemCollection($itemCollection);
             $this->entityManager->persist($item);
             $this->entityManager->flush();
         }

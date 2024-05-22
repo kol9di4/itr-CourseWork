@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\ItemAttributeDateField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -20,6 +21,10 @@ class ItemAttributeDateType extends AbstractType
             $form
                 ->add('value', DateType::class, [
                     'label' => $customItemAttributeName,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Date(),
+                    ]
                 ]);
         });
     }

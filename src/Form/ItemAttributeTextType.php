@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\ItemAttributeTextField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -20,6 +21,10 @@ class ItemAttributeTextType extends AbstractType
             $form
                 ->add('value', TextareaType::class, [
                     'label' => $customItemAttributeName,
+//                    'constraints' => [
+//                        new Assert\NotBlank(),
+//                        new Assert\Length(['min' => 3, 'max' => 4294967295]),
+//                    ]
                 ]);
         });
     }

@@ -6,6 +6,7 @@ use App\Repository\ItemCollectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ItemCollectionRepository::class)]
@@ -17,9 +18,13 @@ class ItemCollection
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3,max: 255)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 4294967295)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -27,7 +32,6 @@ class ItemCollection
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank]
     private ?Image $image = null;
 
     /**
@@ -44,6 +48,7 @@ class ItemCollection
      * @var Collection<int, CustomItemAttribute>
      */
     #[ORM\OneToMany(targetEntity: CustomItemAttribute::class, mappedBy: 'itemCollection', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[Assert\Valid()]
     private Collection $customItemAttributes;
 
     #[ORM\ManyToOne(inversedBy: 'itemCollections')]
