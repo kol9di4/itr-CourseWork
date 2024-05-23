@@ -17,5 +17,18 @@
         {% for attributeInteger in item.getItemAttributeIntegerFields %}
             <h6>{{ attributeInteger.getCustomItemAttribute.getName}} : {{ attributeInteger.getValue }}</h6>
         {% endfor %}
+        <hr>
+        <h1>Comments:</h1>
+        {% for comment in item.getComments %}
+            <h6>{{ comment.getUser.getUsername}} : {{ comment.getText}}</h6>
+        {% endfor %}
+
+
+        {{ form_start(commentForm) }}
+        {{ form_errors(commentForm) }}
+            {{ form_row(commentForm.text) }}
+            {{ form_rest(commentForm) }}
+            <button type="submit" formnovalidate>Send comment</button>
+        {{ form_end(commentForm) }}
     </div>
 {% endblock %}

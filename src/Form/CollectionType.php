@@ -20,9 +20,10 @@ class CollectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class,[
-                'empty_data' => ''
-            ])
+            ->add('name'
+//                , TextType::class,[
+//                'empty_data' => '']
+        )
             ->add('description')
             ->add('image', FileType::class, [
                 'label' => 'Image file',

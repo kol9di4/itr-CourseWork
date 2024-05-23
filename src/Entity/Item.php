@@ -87,6 +87,7 @@ class Item
         $this->itemAttributeTextFields = new ArrayCollection();
         $this->itemAttributeBooleanFields = new ArrayCollection();
         $this->itemAttributeDateFields = new ArrayCollection();
+        $this->dateAdd = new \DateTime();
     }
 
     public function getId(): ?int

@@ -35,7 +35,6 @@ class CollectionController extends AbstractController
     public function create(Request $request, FileUploader $fileUploader): Response
     {
         $itemCollection = new ItemCollection();
-        $itemCollection->setDateAdd(new \DateTime());
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Item;
 use App\Entity\ItemAttributeBooleanField;
 use App\Entity\ItemAttributeDateField;
@@ -9,6 +10,7 @@ use App\Entity\ItemAttributeIntegerField;
 use App\Entity\ItemAttributeStringField;
 use App\Entity\ItemAttributeTextField;
 use App\Entity\ItemCollection;
+use App\Form\CommentType;
 use App\Form\ItemType;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
@@ -71,7 +73,6 @@ class ItemController extends AbstractController
         $form = $this->createForm(ItemType::class, $item);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $item->setDateAdd(new \DateTime());
             $item->setItemCollection($itemCollection);
             $this->entityManager->persist($item);
             $this->entityManager->flush();
@@ -89,7 +90,7 @@ class ItemController extends AbstractController
         return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
     }
 
-    #[Route('/collections/{idCollection}/items/{idItem}', name: 'app_item')]
+    #[Route('/collections/{idCollection}/items/{idItem}', name: 'app_item', methods: ['GET', 'POST'])]
     public function view(Request $request, int $idCollection, int $idItem): Response
     {
         $itemCollection = $this->itemCollectionRepository->findOneBy(['id'=>$idCollection]);
@@ -98,8 +99,17 @@ class ItemController extends AbstractController
             $this->addFlash('error', 'Item not found');
             return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
         }
+        $comment = new Comment();
+        $comment->setItem($item);
+        $comment->setUser($this->getUser());
+        $commentForm  = $this->createForm(CommentType::class,$comment);
+        if ($request->isMethod('POST') && $commentForm->handleRequest($request)->isValid()) {
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+        }
         return $this->render('item/view.html.twig', [
             'item' => $item,
+            'commentForm' => $commentForm->createView(),
         ]);
     }
 
