@@ -21,10 +21,10 @@ class ItemAttributeDateType extends AbstractType
             $form
                 ->add('value', DateType::class, [
                     'label' => $customItemAttributeName,
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                        new Assert\Date(),
-                    ]
+//                    'constraints' => [
+//                        new Assert\NotBlank(),
+//                        new Assert\Date(),
+//                    ]
                 ]);
         });
     }

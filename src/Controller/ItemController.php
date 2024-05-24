@@ -10,10 +10,12 @@ use App\Entity\ItemAttributeIntegerField;
 use App\Entity\ItemAttributeStringField;
 use App\Entity\ItemAttributeTextField;
 use App\Entity\ItemCollection;
+use App\Entity\Like;
 use App\Form\CommentType;
 use App\Form\ItemType;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
+use App\Repository\LikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -30,6 +32,7 @@ class ItemController extends AbstractController
         private EntityManagerInterface $entityManager,
         private ItemCollectionRepository $itemCollectionRepository,
         private ItemRepository $itemRepository,
+        private LikeRepository $likeRepository,
     ){}
 
     #[Route('/collections/{id}/items/create', name: 'app_item_create', methods: ['GET','POST'])]
@@ -93,12 +96,11 @@ class ItemController extends AbstractController
     #[Route('/collections/{idCollection}/items/{idItem}', name: 'app_item', methods: ['GET', 'POST'])]
     public function view(Request $request, int $idCollection, int $idItem): Response
     {
-        $itemCollection = $this->itemCollectionRepository->findOneBy(['id'=>$idCollection]);
-        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
-        if ($item->getItemCollection() !== $itemCollection) {
+        if ($this->isItemPartCollection($idCollection, $idItem)) {
             $this->addFlash('error', 'Item not found');
             return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
         }
+        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
         $comment = new Comment();
         $comment->setItem($item);
         $comment->setUser($this->getUser());
@@ -111,6 +113,32 @@ class ItemController extends AbstractController
             'item' => $item,
             'commentForm' => $commentForm->createView(),
         ]);
+    }
+
+    #[Route('/collections/{idCollection}/items/{idItem}/like', name: 'app_item_like', methods: ['GET', 'POST'])]
+    public function like(Request $request, int $idCollection, int $idItem): Response
+    {
+        if ($this->isItemPartCollection($idCollection, $idItem)) {
+            $this->addFlash('error', 'Item not found');
+            return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
+        }
+        $user = $this->getUser();
+        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
+
+        $like = $this->likeRepository->findOneBy(['user'=>$user,'item'=>$item]);
+        if (empty($like))
+        {
+            $newLike = new Like();
+            $newLike->setUser($user);
+            $newLike->setItem($item);
+            $newLike->setType(1);
+            $this->entityManager->persist($newLike);
+            $this->entityManager->flush();
+        }
+        else
+            dd($like);
+
+        return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
     }
 
     #[Route('/collections/{idCollection}/items/{idItem}/update', name: 'app_item_update', methods: ['GET','POST'])]
@@ -134,5 +162,10 @@ class ItemController extends AbstractController
             'action' => 'update',
             'form' => $form->createView(),
         ]);
+    }
+    private function isItemPartCollection(int $idCollection, int $idItem): bool{
+        $itemCollection = $this->itemCollectionRepository->findOneBy(['id' => $idCollection]);
+        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
+        return ($item->getItemCollection() !== $itemCollection);
     }
 }

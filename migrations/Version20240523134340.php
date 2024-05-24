@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240520141328 extends AbstractMigration
+final class Version20240523134340 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -26,8 +26,11 @@ final class Version20240520141328 extends AbstractMigration
         $this->addSql('CREATE TABLE image (id INT AUTO_INCREMENT NOT NULL, path VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE item (id INT AUTO_INCREMENT NOT NULL, item_collection_id INT NOT NULL, name VARCHAR(255) NOT NULL, date_add DATETIME NOT NULL, INDEX IDX_1F1B251EBDE5FE26 (item_collection_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE item_tag (item_id INT NOT NULL, tag_id INT NOT NULL, INDEX IDX_E49CCCB1126F525E (item_id), INDEX IDX_E49CCCB1BAD26311 (tag_id), PRIMARY KEY(item_id, tag_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE item_attribute_boolean_field (id INT AUTO_INCREMENT NOT NULL, item_id INT NOT NULL, custom_item_attribute_id INT NOT NULL, value TINYINT(1) NOT NULL, INDEX IDX_E63A3670126F525E (item_id), INDEX IDX_E63A36708BF3B7B6 (custom_item_attribute_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE item_attribute_date_field (id INT AUTO_INCREMENT NOT NULL, item_id INT NOT NULL, custom_item_attribute_id INT NOT NULL, value DATE NOT NULL, INDEX IDX_9096E29A126F525E (item_id), INDEX IDX_9096E29A8BF3B7B6 (custom_item_attribute_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE item_attribute_integer_field (id INT AUTO_INCREMENT NOT NULL, item_id INT NOT NULL, custom_item_attribute_id INT NOT NULL, value INT NOT NULL, INDEX IDX_E1567D3F126F525E (item_id), INDEX IDX_E1567D3F8BF3B7B6 (custom_item_attribute_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE item_attribute_string_field (id INT AUTO_INCREMENT NOT NULL, item_id INT NOT NULL, custom_item_attribute_id INT NOT NULL, value VARCHAR(255) NOT NULL, INDEX IDX_76051DC126F525E (item_id), INDEX IDX_76051DC8BF3B7B6 (custom_item_attribute_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE item_attribute_text_field (id INT AUTO_INCREMENT NOT NULL, item_id INT NOT NULL, custom_item_attribute_id INT NOT NULL, value LONGTEXT NOT NULL, INDEX IDX_7CD2B04B126F525E (item_id), INDEX IDX_7CD2B04B8BF3B7B6 (custom_item_attribute_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE item_collection (id INT AUTO_INCREMENT NOT NULL, image_id INT NOT NULL, category_id INT NOT NULL, user_id INT NOT NULL, name VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, date_add DATETIME NOT NULL, UNIQUE INDEX UNIQ_41FC4D383DA5256D (image_id), INDEX IDX_41FC4D3812469DE2 (category_id), INDEX IDX_41FC4D38A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `like` (id INT AUTO_INCREMENT NOT NULL, item_id INT NOT NULL, user_id INT NOT NULL, type SMALLINT NOT NULL, INDEX IDX_AC6340B3126F525E (item_id), INDEX IDX_AC6340B3A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE tag (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -39,10 +42,16 @@ final class Version20240520141328 extends AbstractMigration
         $this->addSql('ALTER TABLE item ADD CONSTRAINT FK_1F1B251EBDE5FE26 FOREIGN KEY (item_collection_id) REFERENCES item_collection (id)');
         $this->addSql('ALTER TABLE item_tag ADD CONSTRAINT FK_E49CCCB1126F525E FOREIGN KEY (item_id) REFERENCES item (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE item_tag ADD CONSTRAINT FK_E49CCCB1BAD26311 FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE item_attribute_boolean_field ADD CONSTRAINT FK_E63A3670126F525E FOREIGN KEY (item_id) REFERENCES item (id)');
+        $this->addSql('ALTER TABLE item_attribute_boolean_field ADD CONSTRAINT FK_E63A36708BF3B7B6 FOREIGN KEY (custom_item_attribute_id) REFERENCES custom_item_attribute (id)');
+        $this->addSql('ALTER TABLE item_attribute_date_field ADD CONSTRAINT FK_9096E29A126F525E FOREIGN KEY (item_id) REFERENCES item (id)');
+        $this->addSql('ALTER TABLE item_attribute_date_field ADD CONSTRAINT FK_9096E29A8BF3B7B6 FOREIGN KEY (custom_item_attribute_id) REFERENCES custom_item_attribute (id)');
         $this->addSql('ALTER TABLE item_attribute_integer_field ADD CONSTRAINT FK_E1567D3F126F525E FOREIGN KEY (item_id) REFERENCES item (id)');
         $this->addSql('ALTER TABLE item_attribute_integer_field ADD CONSTRAINT FK_E1567D3F8BF3B7B6 FOREIGN KEY (custom_item_attribute_id) REFERENCES custom_item_attribute (id)');
         $this->addSql('ALTER TABLE item_attribute_string_field ADD CONSTRAINT FK_76051DC126F525E FOREIGN KEY (item_id) REFERENCES item (id)');
         $this->addSql('ALTER TABLE item_attribute_string_field ADD CONSTRAINT FK_76051DC8BF3B7B6 FOREIGN KEY (custom_item_attribute_id) REFERENCES custom_item_attribute (id)');
+        $this->addSql('ALTER TABLE item_attribute_text_field ADD CONSTRAINT FK_7CD2B04B126F525E FOREIGN KEY (item_id) REFERENCES item (id)');
+        $this->addSql('ALTER TABLE item_attribute_text_field ADD CONSTRAINT FK_7CD2B04B8BF3B7B6 FOREIGN KEY (custom_item_attribute_id) REFERENCES custom_item_attribute (id)');
         $this->addSql('ALTER TABLE item_collection ADD CONSTRAINT FK_41FC4D383DA5256D FOREIGN KEY (image_id) REFERENCES image (id)');
         $this->addSql('ALTER TABLE item_collection ADD CONSTRAINT FK_41FC4D3812469DE2 FOREIGN KEY (category_id) REFERENCES category (id)');
         $this->addSql('ALTER TABLE item_collection ADD CONSTRAINT FK_41FC4D38A76ED395 FOREIGN KEY (user_id) REFERENCES `user` (id)');
@@ -59,10 +68,16 @@ final class Version20240520141328 extends AbstractMigration
         $this->addSql('ALTER TABLE item DROP FOREIGN KEY FK_1F1B251EBDE5FE26');
         $this->addSql('ALTER TABLE item_tag DROP FOREIGN KEY FK_E49CCCB1126F525E');
         $this->addSql('ALTER TABLE item_tag DROP FOREIGN KEY FK_E49CCCB1BAD26311');
+        $this->addSql('ALTER TABLE item_attribute_boolean_field DROP FOREIGN KEY FK_E63A3670126F525E');
+        $this->addSql('ALTER TABLE item_attribute_boolean_field DROP FOREIGN KEY FK_E63A36708BF3B7B6');
+        $this->addSql('ALTER TABLE item_attribute_date_field DROP FOREIGN KEY FK_9096E29A126F525E');
+        $this->addSql('ALTER TABLE item_attribute_date_field DROP FOREIGN KEY FK_9096E29A8BF3B7B6');
         $this->addSql('ALTER TABLE item_attribute_integer_field DROP FOREIGN KEY FK_E1567D3F126F525E');
         $this->addSql('ALTER TABLE item_attribute_integer_field DROP FOREIGN KEY FK_E1567D3F8BF3B7B6');
         $this->addSql('ALTER TABLE item_attribute_string_field DROP FOREIGN KEY FK_76051DC126F525E');
         $this->addSql('ALTER TABLE item_attribute_string_field DROP FOREIGN KEY FK_76051DC8BF3B7B6');
+        $this->addSql('ALTER TABLE item_attribute_text_field DROP FOREIGN KEY FK_7CD2B04B126F525E');
+        $this->addSql('ALTER TABLE item_attribute_text_field DROP FOREIGN KEY FK_7CD2B04B8BF3B7B6');
         $this->addSql('ALTER TABLE item_collection DROP FOREIGN KEY FK_41FC4D383DA5256D');
         $this->addSql('ALTER TABLE item_collection DROP FOREIGN KEY FK_41FC4D3812469DE2');
         $this->addSql('ALTER TABLE item_collection DROP FOREIGN KEY FK_41FC4D38A76ED395');
@@ -74,8 +89,11 @@ final class Version20240520141328 extends AbstractMigration
         $this->addSql('DROP TABLE image');
         $this->addSql('DROP TABLE item');
         $this->addSql('DROP TABLE item_tag');
+        $this->addSql('DROP TABLE item_attribute_boolean_field');
+        $this->addSql('DROP TABLE item_attribute_date_field');
         $this->addSql('DROP TABLE item_attribute_integer_field');
         $this->addSql('DROP TABLE item_attribute_string_field');
+        $this->addSql('DROP TABLE item_attribute_text_field');
         $this->addSql('DROP TABLE item_collection');
         $this->addSql('DROP TABLE `like`');
         $this->addSql('DROP TABLE tag');
