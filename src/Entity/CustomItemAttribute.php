@@ -2,8 +2,7 @@
 
 namespace App\Entity;
 
-use App\Enum\CustomAttributeType as CustomAttributeTypeEnum;
-
+use App\Enum\CustomAttributeEnum as CustomAttributeTypeEnum;
 use App\Repository\CustomItemAttributeRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,15 +21,20 @@ class CustomItemAttribute
     #[Assert\Length(min:3,max: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
-//    #[ORM\Column(length: 10, enumType: CustomAttributeTypeEnum::class)]
-//    private ?CustomAttributeTypeEnum $type = null;
+//    #[ORM\Column(length: 255)]
+//    private ?string $type = null;
+    #[ORM\Column(length: 10, enumType: CustomAttributeTypeEnum::class)]
+    private ?CustomAttributeTypeEnum $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'customItemAttributes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ItemCollection $itemCollection = null;
 
+    public function __construct()
+    {
+        $this->type = CustomAttributeTypeEnum::Integer;
+//...
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -48,12 +52,12 @@ class CustomItemAttribute
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?CustomAttributeTypeEnum
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(CustomAttributeTypeEnum $type): static
     {
         $this->type = $type;
 

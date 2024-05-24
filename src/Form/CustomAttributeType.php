@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\CustomItemAttribute;
-use App\Enum\CustomAttributeType as CustomAttributeTypeEnum;
+use App\Enum\CustomAttributeEnum as CustomAttributeTypeEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
@@ -19,19 +19,19 @@ class CustomAttributeType extends AbstractType
             ->add('type',enumType::class,[
                 'class' => CustomAttributeTypeEnum::class
             ])
-            ->add('type',ChoiceType::class, [
-                'choices'  => [
-                    'Integer' => 'Integer',
-                    'String' => 'String',
-                    'Text' => 'Text',
-                    'Boolean' => 'Boolean',
-                    'Date' => 'Date',
-                ],
-            ])
-//            enumType
-//        ->add('type', EnumType::class, [
-//                'class' => \App\Enum\CustomAttributeType::class
+//            ->add('type',ChoiceType::class, [
+//                'choices'  => [
+//                    'Integer' => 'Integer',
+//                    'String' => 'String',
+//                    'Text' => 'Text',
+//                    'Boolean' => 'Boolean',
+//                    'Date' => 'Date',
+//                ],
 //            ])
+//            enumType
+        ->add('type', EnumType::class, [
+                'class' => \App\Enum\CustomAttributeEnum::class
+            ])
         ;
     }
 

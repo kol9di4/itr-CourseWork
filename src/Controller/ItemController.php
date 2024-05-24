@@ -11,6 +11,7 @@ use App\Entity\ItemAttributeStringField;
 use App\Entity\ItemAttributeTextField;
 use App\Entity\ItemCollection;
 use App\Entity\Like;
+use App\Enum\CustomAttributeEnum;
 use App\Form\CommentType;
 use App\Form\ItemType;
 use App\Repository\ItemCollectionRepository;
@@ -41,31 +42,31 @@ class ItemController extends AbstractController
         $item = new Item();
         $customAttributes = $itemCollection->getCustomItemAttributes()->getValues();
         foreach ($customAttributes as $customAttributeValue) {
-            if ($customAttributeValue->getType() === 'Integer') {
+            if ($customAttributeValue->getType() === CustomAttributeEnum::Integer) {
                 $itemAttributeInteger = new ItemAttributeIntegerField();
                 $itemAttributeInteger->setCustomItemAttribute($customAttributeValue);
                 $item->addItemAttributeIntegerField($itemAttributeInteger);
                 $this->entityManager->persist($itemAttributeInteger);
             }
-            if ($customAttributeValue->getType() === 'String') {
+            if ($customAttributeValue->getType() === CustomAttributeEnum::String) {
                 $itemAttributeString = new ItemAttributeStringField();
                 $itemAttributeString->setCustomItemAttribute($customAttributeValue);
                 $item->addItemAttributeStringField($itemAttributeString);
                 $this->entityManager->persist($itemAttributeString);
             }
-            if ($customAttributeValue->getType() === 'Text') {
+            if ($customAttributeValue->getType() === CustomAttributeEnum::Text) {
                 $itemAttributeText = new ItemAttributeTextField();
                 $itemAttributeText->setCustomItemAttribute($customAttributeValue);
                 $item->addItemAttributeTextField($itemAttributeText);
                 $this->entityManager->persist($itemAttributeText);
             }
-            if ($customAttributeValue->getType() === 'Boolean') {
+            if ($customAttributeValue->getType() === CustomAttributeEnum::Boolean) {
                 $itemAttributeBoolean = new ItemAttributeBooleanField();
                 $itemAttributeBoolean->setCustomItemAttribute($customAttributeValue);
                 $item->addItemAttributeBooleanField($itemAttributeBoolean);
                 $this->entityManager->persist($itemAttributeBoolean);
             }
-            if ($customAttributeValue->getType() === 'Date') {
+            if ($customAttributeValue->getType() === CustomAttributeEnum::Date) {
                 $itemAttributeDate = new ItemAttributeDateField();
                 $itemAttributeDate->setCustomItemAttribute($customAttributeValue);
                 $itemAttributeDate->setValue(new \DateTime());
