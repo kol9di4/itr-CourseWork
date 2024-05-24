@@ -2,8 +2,11 @@
 
 namespace App\Enum;
 
+use App\Service\EnumToArrayTrait;
+
 enum CustomAttributeType : string
 {
+    use EnumToArrayTrait;
 //    case Integer;
 //    case String;
 //    case Text;

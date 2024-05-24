@@ -3,9 +3,7 @@
 namespace App\Form;
 
 use App\Entity\CustomItemAttribute;
-use App\Entity\ItemCollection;
-use App\Enum\CustomAttributeTypeEnum;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Enum\CustomAttributeType as CustomAttributeTypeEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;

@@ -109,36 +109,49 @@ class ItemController extends AbstractController
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
         }
+        $likeCount = $this->likeRepository->count(['item'=>$item,'type'=>1]);
+        $dislikeCount = $this->likeRepository->count(['item'=>$item, 'type'=>-1]);
         return $this->render('item/view.html.twig', [
             'item' => $item,
             'commentForm' => $commentForm->createView(),
+            'likeCount' => $likeCount,
+            'dislikeCount' => $dislikeCount,
         ]);
     }
 
-    #[Route('/collections/{idCollection}/items/{idItem}/like', name: 'app_item_like', methods: ['GET', 'POST'])]
-    public function like(Request $request, int $idCollection, int $idItem): Response
+    #[Route('/collections/{idCollection}/items/{idItem}/like', name: 'app_item_like', methods: ['POST'])]
+    public function like(Request $request, int $idCollection, int $idItem): void
     {
-        if ($this->isItemPartCollection($idCollection, $idItem)) {
-            $this->addFlash('error', 'Item not found');
-            return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
-        }
+//        if ($this->isItemPartCollection($idCollection, $idItem)) {
+//            $this->addFlash('error', 'Item not found');
+//            return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
+//        }
         $user = $this->getUser();
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);
-
         $like = $this->likeRepository->findOneBy(['user'=>$user,'item'=>$item]);
+        $likeTypeRequest = $request->request->get('likeType');
         if (empty($like))
         {
             $newLike = new Like();
             $newLike->setUser($user);
             $newLike->setItem($item);
-            $newLike->setType(1);
+            $newLike->setType($likeTypeRequest);
             $this->entityManager->persist($newLike);
-            $this->entityManager->flush();
         }
         else
-            dd($like);
+        {
+            dump($like->getType());
+            dump((int)$likeTypeRequest);
+            if ($like->getType() === $likeTypeRequest*-1 || $like->getType() === 0)
+                $like->setType($likeTypeRequest);
+            elseif ($like->getType() === (int)$likeTypeRequest)
+                $like->setType(0);
 
-        return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
+        }
+        $this->entityManager->flush();
+        echo  '1';
+        exit();
+//        return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
     }
 
     #[Route('/collections/{idCollection}/items/{idItem}/update', name: 'app_item_update', methods: ['GET','POST'])]

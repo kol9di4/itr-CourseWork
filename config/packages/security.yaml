@@ -37,6 +37,7 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: /create$, roles: ROLE_USER }
          - { path: /update$, roles: ROLE_USER }
+         - { path: /like, roles: ROLE_USER }
 
 when@test:
     security:
