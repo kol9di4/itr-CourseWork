@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ItemCollectionRepository;
+use App\Validator\CollectionCustomAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -49,6 +50,7 @@ class ItemCollection
      */
     #[ORM\OneToMany(targetEntity: CustomItemAttribute::class, mappedBy: 'itemCollection', orphanRemoval: true, cascade: ['persist', 'remove'])]
     #[Assert\Valid()]
+    #[CollectionCustomAttribute()]
     private Collection $customItemAttributes;
 
     #[ORM\ManyToOne(inversedBy: 'itemCollections')]
