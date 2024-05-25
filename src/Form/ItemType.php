@@ -24,7 +24,7 @@ class ItemType extends AbstractType
             ])
             ->add('tag', EntityType::class, [
                 'class' => Tag::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
             ])
             ->add('itemAttributeIntegerFields',SymfonyCollectionType::class, [
