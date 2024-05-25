@@ -19,8 +19,23 @@
         {% for attributeString in item.getItemAttributeStringFields %}
             <h6>{{ attributeString.getCustomItemAttribute.getName}} : {{ attributeString.getValue }}</h6>
         {% endfor %}
-        {% for attributeInteger in item.getItemAttributeIntegerFields %}
-            <h6>{{ attributeInteger.getCustomItemAttribute.getName}} : {{ attributeInteger.getValue }}</h6>
+        {% for attribute in item.getItemAttributeIntegerFields %}
+            <h6>{{ attribute.getCustomItemAttribute.getName}} : {{ attribute.getValue }}</h6>
+        {% endfor %}
+        {% for attribute in item.getItemAttributeTextFields %}
+            <h6>{{ attribute.getCustomItemAttribute.getName}} : {{ attribute.getValue }}</h6>
+        {% endfor %}
+        {% for attribute in item.getItemAttributeBooleanFields %}
+            <h6>{{ attribute.getCustomItemAttribute.getName}} :
+                {% if attribute.isValue == 1  %}
+                    true
+                {% else %}
+                    false
+                {% endif %}
+            </h6>
+        {% endfor %}
+        {% for attribute in item.getItemAttributeDateFields %}
+            <h6>{{ attribute.getCustomItemAttribute.getName}} : {{ attribute.getValue|date("d.m.Y") }}</h6>
         {% endfor %}
         <hr>
 
