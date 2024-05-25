@@ -29,20 +29,12 @@ class CollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/collections/{id}', name: 'app_collection_view')]
-    public function view(ItemCollection $itemCollection): Response
-    {
-        return $this->render('collection/vew.html.twig', [
-            'controller_name' => 'View',
-            'itemCollection' => $itemCollection,
-        ]);
-    }
+
 
     #[Route('/collections/create', name: 'app_collection_create', methods: ['GET', 'POST'])]
     public function create(Request $request, FileUploader $fileUploader): Response
     {
         $itemCollection = new ItemCollection();
-        $itemCollection->setDateAdd(new \DateTime());
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -67,16 +59,24 @@ class CollectionController extends AbstractController
             'form'  => $form
         ]);
     }
+    #[Route('/collections/{id}', name: 'app_collection_view')]
+    public function view(ItemCollection $itemCollection): Response
+    {
+        return $this->render('collection/vew.html.twig', [
+            'controller_name' => 'View',
+            'itemCollection' => $itemCollection,
+        ]);
+    }
 
     #[Route('/collections/{id}/update', name: 'app_collection_update', methods: ['GET', 'POST'])]
     public function update(Request $request, FileUploader $fileUploader, ItemCollection $itemCollection): Response
     {
         $user = $this->getUser();
-        $isMatched = $user->getId() === $itemCollection->getUser()->getId();
+        $isUserMatched = $user->getId() === $itemCollection->getUser()->getId();
         $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
-        if(!($isMatched || $isSetRole)) {
+        if(!($isUserMatched || $isSetRole)) {
             $this->addFlash('error', 'No permissions to edit.');
-            return $this->redirectToRoute('app_collection',['id' => $itemCollection->getId()]);
+            return $this->redirectToRoute('app_collection_view',['id' => $itemCollection->getId()]);
         }
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
@@ -89,7 +89,7 @@ class CollectionController extends AbstractController
                 $itemCollection->setImage($image);
                 $this->entityManager->persist($image);
             }
-            $this->entityManager->persist($itemCollection);
+
             $this->entityManager->flush();
             $this->addFlash('success', 'Collection updated.');
             return $this->redirectToRoute('app_collection',['id' => $itemCollection->getId()]);

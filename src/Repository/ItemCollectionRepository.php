@@ -22,7 +22,7 @@ class ItemCollectionRepository extends ServiceEntityRepository
 //    public function findByExampleField($value): array
 //    {
 //        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
+//            ->andWhere('i.id = :val')
 //            ->setParameter('val', $value)
 //            ->orderBy('i.id', 'ASC')
 //            ->setMaxResults(10)
@@ -34,7 +34,7 @@ class ItemCollectionRepository extends ServiceEntityRepository
 //    public function findOneBySomeField($value): ?ItemCollection
 //    {
 //        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
+//            ->andWhere('i.id = :val')
 //            ->setParameter('val', $value)
 //            ->getQuery()
 //            ->getOneOrNullResult()

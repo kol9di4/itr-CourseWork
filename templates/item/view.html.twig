@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CollectionController!{% endblock %}
+
+{% block body %}
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('js/like-helper.js') }}"></script>
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div>
+        <div class="head mb-4">
+            <div class="d-flex justify-content-between">
+                <h2 class="display-4">{{ item.getName|capitalize }}</h2>
+                <h6 class="ms-5 mt-3 text-muted">{{ item.getDateAdd|date("d.m.Y") }}</h6>
+            </div>
+            <a class="h5 text-muted" href="#">Category: {{ item.getItemCollection.getCategory.getName }}</a>
+        </div>
+
+
+        {% for attributeString in item.getItemAttributeStringFields %}
+            <h4 class="display-6"><span class="text-primary">{{ attributeString.getCustomItemAttribute.getName}}:</span>  {{ attributeString.getValue }}</h4>
+        {% endfor %}
+        {% for attribute in item.getItemAttributeIntegerFields %}
+            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>  {{ attribute.getValue }}</h4>
+        {% endfor %}
+        {% for attribute in item.getItemAttributeTextFields %}
+            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>  {{ attribute.getValue }}</h4>
+        {% endfor %}
+        {% for attribute in item.getItemAttributeBooleanFields %}
+            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>
+                {% if attribute.isValue == 1  %}
+                    true
+                {% else %}
+                    false
+                {% endif %}
+            </h4>
+        {% endfor %}
+        {% for attribute in item.getItemAttributeDateFields %}
+            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>  {{ attribute.getValue|date("d.m.Y") }}</h4>
+        {% endfor %}
+
+
+        <div class="likes">
+            {% block likes %}
+                {{ include('item/like/index.html.twig') }}
+            {% endblock %}
+        </div>
+        <div class="comments">
+            {% block comments %}
+                {{ include('item/comments/index.html.twig') }}
+            {% endblock %}
+        </div>
+
+
+
+    </div>
+{% endblock %}
