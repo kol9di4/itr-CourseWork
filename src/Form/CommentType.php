@@ -19,6 +19,7 @@ class CommentType extends AbstractType
                     new Assert\NotBlank()
                 ],
                 'empty_data' => '',
+                'label' => false,
             ])
         ;
     }

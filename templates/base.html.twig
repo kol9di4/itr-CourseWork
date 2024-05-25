@@ -17,48 +17,28 @@
     <body>
 
     {% block header %}
-        {% if app.user == null %}
-            <nav class="navbar navbar-expand-lg navbar-light py-4" style="background-color: rgb(246, 245, 255);">
-                <div class="container">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav_lc" aria-controls="nav_lc" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse d-flex justify-content-end" id="nav_lc">
-                        <div><a class="btn btn-outline-secondary me-2" href='{{path('app_login') }}'>Sign In</a>
-                            <a class="btn btn-primary" href='{{ path('app_register') }}'>Sign Up</a></div>
-                    </div>
-                </div>
-            </nav>
-        {% else %}
-            <nav class="navbar navbar-expand-lg navbar-light py-4" style="background-color: rgb(246, 245, 255);">
-                <div class="container">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav_lc" aria-controls="nav_lc" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse d-flex justify-content-end" id="nav_lc">
-                        <h6 class="mx-2 mb-0">Hello, <b> {{app.user.username}} </b> </h6>
-                        <div><a class="btn btn-outline-secondary me-1" href="{{ path('app_logout') }}">Log out</a></div>
-                    </div>
-                </div>
-            </nav>
-        {% endif %}
+        {{ include('header/index.html.twig') }}
     {% endblock %}
-
-
-        <div class="flash-messages">
+    {% block flashes %}
+        <div class="container flash-messages">
             {% for message in app.flashes('success') %}
-                <div class="alert-success">{{ message }}</div>
+                <div class="my-2 alert alert-success">{{ message }}</div>
             {% endfor %}
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="flash-{{ label }}">
+                    <div class="my-2 alert flash-{{ label }}">
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endfor %}
         </div>
-
+    {% endblock %}
     <div class="container">
+        {% block left_menu %}
+            <div class="">
+
+            </div>
+        {% endblock %}
         {% block body %}
         {% endblock %}
     </div>
