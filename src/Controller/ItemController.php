@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Const\LikeTypeConst;
 use App\Entity\Comment;
+use App\Entity\CustomItemAttribute;
 use App\Entity\Item;
 use App\Entity\ItemAttributeBooleanField;
 use App\Entity\ItemAttributeDateField;
@@ -12,6 +13,7 @@ use App\Entity\ItemAttributeStringField;
 use App\Entity\ItemAttributeTextField;
 use App\Entity\ItemCollection;
 use App\Entity\Like;
+use App\Entity\User;
 use App\Enum\CustomAttributeEnum;
 use App\Form\CommentType;
 use App\Form\ItemType;
@@ -23,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ItemController extends AbstractController
 {
@@ -37,49 +40,16 @@ class ItemController extends AbstractController
     #[Route('/collections/{id}/items/create', name: 'app_item_create', methods: ['GET','POST'])]
     public function index(Request $request,ItemCollection $itemCollection): Response
     {
-        $item = new Item();
-        $customAttributes = $itemCollection->getCustomItemAttributes()->getValues();
-        foreach ($customAttributes as $customAttributeValue) {
-            if ($customAttributeValue->getType() === CustomAttributeEnum::Integer) {
-                $itemAttributeInteger = new ItemAttributeIntegerField();
-                $itemAttributeInteger->setCustomItemAttribute($customAttributeValue);
-                $item->addItemAttributeIntegerField($itemAttributeInteger);
-                $this->entityManager->persist($itemAttributeInteger);
-            }
-            if ($customAttributeValue->getType() === CustomAttributeEnum::String) {
-                $itemAttributeString = new ItemAttributeStringField();
-                $itemAttributeString->setCustomItemAttribute($customAttributeValue);
-                $item->addItemAttributeStringField($itemAttributeString);
-                $this->entityManager->persist($itemAttributeString);
-            }
-            if ($customAttributeValue->getType() === CustomAttributeEnum::Text) {
-                $itemAttributeText = new ItemAttributeTextField();
-                $itemAttributeText->setCustomItemAttribute($customAttributeValue);
-                $item->addItemAttributeTextField($itemAttributeText);
-                $this->entityManager->persist($itemAttributeText);
-            }
-            if ($customAttributeValue->getType() === CustomAttributeEnum::Boolean) {
-                $itemAttributeBoolean = new ItemAttributeBooleanField();
-                $itemAttributeBoolean->setCustomItemAttribute($customAttributeValue);
-                $item->addItemAttributeBooleanField($itemAttributeBoolean);
-                $this->entityManager->persist($itemAttributeBoolean);
-            }
-            if ($customAttributeValue->getType() === CustomAttributeEnum::Date) {
-                $itemAttributeDate = new ItemAttributeDateField();
-                $itemAttributeDate->setCustomItemAttribute($customAttributeValue);
-                $itemAttributeDate->setValue(new \DateTime());
-                $item->addItemAttributeDateField($itemAttributeDate);
-                $this->entityManager->persist($itemAttributeDate);
-            }
-        }
+        $item = $this->setAttributesToAnItem($itemCollection);
         $form = $this->createForm(ItemType::class, $item);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $item->setItemCollection($itemCollection);
             $this->entityManager->persist($item);
             $this->entityManager->flush();
+            $this->addFlash('success', 'Item created.');
+            return $this->redirectToRoute('app_collection_view', ['id'=>$itemCollection->getId()]);
         }
-
         return $this->render('item/form.html.twig', [
             'action' => 'create',
             'form' => $form->createView(),
@@ -123,24 +93,11 @@ class ItemController extends AbstractController
     public function like(Request $request, int $idCollection, int $idItem): void
     {
         $user = $this->getUser();
+        $likeType = (int)$request->request->get('likeType')===1
+            ? LikeTypeConst::LIKE
+            : LikeTypeConst::DISLIKE;
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);
-        $like = $this->likeRepository->findOneBy(['user'=>$user,'item'=>$item]);
-        $likeTypeRequest = (int)$request->request->get('likeType');
-        if (empty($like))
-        {
-            $newLike = new Like();
-            $newLike->setUser($user);
-            $newLike->setItem($item);
-            $newLike->setType($likeTypeRequest);
-            $this->entityManager->persist($newLike);
-        }
-        else
-        {
-            if ($like->getType() === $likeTypeRequest*-1 || $like->getType() === 0)
-                $like->setType($likeTypeRequest);
-            elseif ($like->getType() === $likeTypeRequest)
-                $like->setType(0);
-        }
+        $this->setLike($item, $user, $likeType);
         $this->entityManager->flush();
         $likesInfo = $this->getLikesInfo($item);
         $likeDiv = $this->render('item/like/index.html.twig',
@@ -165,6 +122,11 @@ class ItemController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($item);
             $this->entityManager->flush();
+            $this->addFlash('success', 'Update successful');
+            return $this->redirectToRoute('app_item', [
+                'idCollection'=>$itemCollection->getId(),
+                'idItem'=>$item->getId(),
+            ]);
         }
 
         return $this->render('item/form.html.twig', [
@@ -178,10 +140,52 @@ class ItemController extends AbstractController
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);
         return ($item->getItemCollection() !== $itemCollection);
     }
-//    private function setAttributesToAnItem(ItemCollection $itemCollection): Item{
-//
-//    }
-    private function getLikesInfo(Item $item): array{
+    private function setAttributesToAnItem(ItemCollection $itemCollection): Item{
+        $item = new Item();
+        $customAttributes = $itemCollection->getCustomItemAttributes()->getValues();
+        foreach ($customAttributes as $customAttributeValue) {
+            switch ($customAttributeValue->getType())
+            {
+                case CustomAttributeEnum::Integer:
+                    $item = $this->setIntegerAttributes($item, $customAttributeValue);
+                    break;
+                case CustomAttributeEnum::String:
+                    $item = $this->setStringAttributes($item, $customAttributeValue);
+                    break;
+                case CustomAttributeEnum::Text:
+                    $item = $this->setTextAttributes($item, $customAttributeValue);
+                    break;
+                case CustomAttributeEnum::Boolean:
+                    $item = $this->setBooleanAttributes($item, $customAttributeValue);
+                    break;
+                case CustomAttributeEnum::Date:
+                    $item = $this->setDateAttributes($item, $customAttributeValue);
+                    break;
+            }
+        }
+        return $item;
+    }
+    private function setLike(Item $item, User $user, int $likeType):void
+    {
+        $like = $this->likeRepository->findOneBy(['user'=>$user,'item'=>$item]);
+        if (empty($like))
+        {
+            $newLike = new Like();
+            $newLike->setUser($user);
+            $newLike->setItem($item);
+            $newLike->setType($likeType);
+            $this->entityManager->persist($newLike);
+        }
+        else
+        {
+            if ($like->getType() === $likeType*-1 || $like->getType() === 0)
+                $like->setType($likeType);
+            elseif ($like->getType() === $likeType)
+                $like->setType(0);
+        }
+    }
+    private function getLikesInfo(Item $item): array
+    {
         $result = [];
         $result['likeCount'] = $this->getLikeCountByType($item,LikeTypeConst::LIKE);
         $result['dislikeCount'] = $this->getLikeCountByType($item,LikeTypeConst::DISLIKE);
@@ -196,5 +200,46 @@ class ItemController extends AbstractController
         return empty($this->likeRepository->findOneBy(['item'=>$item,'user'=>$this->getUser()]))
             ?0
             :$this->likeRepository->findOneBy(['item'=>$item,'user'=>$this->getUser()])->getType();
+    }
+    private function setIntegerAttributes(Item $item, CustomItemAttribute $customAttributeValue): Item{
+        $itemAttributeInteger = new ItemAttributeIntegerField();
+        $itemAttributeInteger->setCustomItemAttribute($customAttributeValue);
+        $item->addItemAttributeIntegerField($itemAttributeInteger);
+        $this->entityManager->persist($itemAttributeInteger);
+
+        return $item;
+    }
+    private function setStringAttributes(Item $item, CustomItemAttribute $customAttributeValue): Item{
+        $itemAttributeString = new ItemAttributeStringField();
+        $itemAttributeString->setCustomItemAttribute($customAttributeValue);
+        $item->addItemAttributeStringField($itemAttributeString);
+        $this->entityManager->persist($itemAttributeString);
+
+        return $item;
+    }
+    private function setTextAttributes(Item $item, CustomItemAttribute $customAttributeValue): Item{
+        $itemAttributeText = new ItemAttributeTextField();
+        $itemAttributeText->setCustomItemAttribute($customAttributeValue);
+        $item->addItemAttributeTextField($itemAttributeText);
+        $this->entityManager->persist($itemAttributeText);
+
+        return $item;
+    }
+    private function setBooleanAttributes(Item $item, CustomItemAttribute $customAttributeValue): Item{
+        $itemAttributeBoolean = new ItemAttributeBooleanField();
+        $itemAttributeBoolean->setCustomItemAttribute($customAttributeValue);
+        $item->addItemAttributeBooleanField($itemAttributeBoolean);
+        $this->entityManager->persist($itemAttributeBoolean);
+
+        return $item;
+    }
+    private function setDateAttributes(Item $item, CustomItemAttribute $customAttributeValue): Item{
+        $itemAttributeDate = new ItemAttributeDateField();
+        $itemAttributeDate->setCustomItemAttribute($customAttributeValue);
+        $itemAttributeDate->setValue(new \DateTime());
+        $item->addItemAttributeDateField($itemAttributeDate);
+        $this->entityManager->persist($itemAttributeDate);
+
+        return $item;
     }
 }
