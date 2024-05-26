@@ -73,16 +73,16 @@
                                 <div class="col-12">
                                     <div class="card-body h-100 d-flex flex-column justify-content-between">
                                         <div class="text mb-2">
-                                            <div class="text-header d-flex justify-content-between align-items-center">
-                                                <div class="d-flex">
-                                                    <h6 class="me-4 text-muted">Collection : <a
+                                            <div class="text-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                                                <div class="d-flex flex-column flex-md-row">
+                                                    <h6 class="me-4 text-muted flex-shrink-0">Collection : <a
                                                                 href="{{ path('app_collection_view',{'id': item.getItemCollection.getId}) }}">{{ item.getItemCollection.getName }}</a>
                                                     </h6>
-                                                    <h6 class="text-muted">Category : <a
+                                                    <h6 class="text-muted  flex-shrink-0">Category : <a
                                                                 href="#">{{ item.getItemCollection.getCategory.getName }}</a>
                                                     </h6>
                                                 </div>
-                                                <p class="lead">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>
+                                                <p class="lead  flex-shrink-0">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>
                                             </div>
                                         </div>
                                         <div class="bottom">

@@ -58,7 +58,7 @@
                     <div class="my-2">
                         {% for attribute in item.getItemAttributeTextFields %}
                             <div class="lead fs-4 text-primary me-4 float-start">{{ attribute.getCustomItemAttribute.getName}}:</div>
-                            <div class="lead fs-4">{{ attribute.getValue }}</div>
+                            <p class="lead fs-4">{{ attribute.getValue }}</p>
                         {% endfor %}
                     </div>
                 </div>
