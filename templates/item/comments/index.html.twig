@@ -1,4 +1,14 @@
-<h5 class="mt-4 text-primary comment-count display-6"><span>{{ item.getComments|length }}</span> comments</h5>
+
+<h5 class="mt-4 text-primary comment-count display-6">
+    <span>
+        {{ item.getComments|length }}
+    </span>
+    {% if  item.getComments|length == 1  %}
+        comment
+    {% else %}
+        comments
+    {% endif %}
+</h5>
 <div>
     <div class="my-4" style="background-color:#0d6efd;height: 2px;"></div>
     <div class="comments-vew">
@@ -15,7 +25,7 @@
         {% endfor %}
     </div>
     <!-- end comment -->
-    <div class="comment-new">
+    <div class="comment-new mt-4">
         {{ form_start(commentForm) }}
             <h5>Add new comment:</h5>
             {{ form_errors(commentForm) }}

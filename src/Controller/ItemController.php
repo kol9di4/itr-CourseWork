@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Const\LikeTypeConst;
 use App\Entity\Comment;
 use App\Entity\Item;
 use App\Entity\ItemAttributeBooleanField;
@@ -108,28 +109,23 @@ class ItemController extends AbstractController
         if ($request->isMethod('POST') && $commentForm->handleRequest($request)->isValid()) {
             $this->entityManager->persist($comment);
         }
-        $likeCount = $this->likeRepository->count(['item'=>$item,'type'=>1]);
-        $dislikeCount = $this->likeRepository->count(['item'=>$item, 'type'=>-1]);
+
         $this->entityManager->flush();
-        return $this->render('item/view.html.twig', [
+        $likesInfo = $this->getLikesInfo($item);
+        return $this->render('item/view.html.twig', array_merge([
             'item' => $item,
             'commentForm' => $commentForm->createView(),
-            'likeCount' => $likeCount,
-            'dislikeCount' => $dislikeCount,
-        ]);
+        ],$likesInfo)
+        );
     }
 
     #[Route('/collections/{idCollection}/items/{idItem}/like', name: 'app_item_like', methods: ['POST'])]
     public function like(Request $request, int $idCollection, int $idItem): void
     {
-//        if ($this->isItemPartCollection($idCollection, $idItem)) {
-//            $this->addFlash('error', 'Item not found');
-//            return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
-//        }
         $user = $this->getUser();
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);
         $like = $this->likeRepository->findOneBy(['user'=>$user,'item'=>$item]);
-        $likeTypeRequest = $request->request->get('likeType');
+        $likeTypeRequest = (int)$request->request->get('likeType');
         if (empty($like))
         {
             $newLike = new Like();
@@ -140,18 +136,18 @@ class ItemController extends AbstractController
         }
         else
         {
-            dump($like->getType());
-            dump((int)$likeTypeRequest);
             if ($like->getType() === $likeTypeRequest*-1 || $like->getType() === 0)
                 $like->setType($likeTypeRequest);
-            elseif ($like->getType() === (int)$likeTypeRequest)
+            elseif ($like->getType() === $likeTypeRequest)
                 $like->setType(0);
-
         }
         $this->entityManager->flush();
-        echo  '1';
+        $likesInfo = $this->getLikesInfo($item);
+        $likeDiv = $this->render('item/like/index.html.twig',
+            array_merge(['item' => $item], $likesInfo)
+        );
+        echo  json_encode($likeDiv->getContent());
         exit();
-//        return $this->redirectToRoute('app_item', ['idCollection'=>$idCollection, 'idItem'=>$idItem]);
     }
 
     #[Route('/collections/{idCollection}/items/{idItem}/update', name: 'app_item_update', methods: ['GET','POST'])]
@@ -181,5 +177,24 @@ class ItemController extends AbstractController
         $itemCollection = $this->itemCollectionRepository->findOneBy(['id' => $idCollection]);
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);
         return ($item->getItemCollection() !== $itemCollection);
+    }
+//    private function setAttributesToAnItem(ItemCollection $itemCollection): Item{
+//
+//    }
+    private function getLikesInfo(Item $item): array{
+        $result = [];
+        $result['likeCount'] = $this->getLikeCountByType($item,LikeTypeConst::LIKE);
+        $result['dislikeCount'] = $this->getLikeCountByType($item,LikeTypeConst::DISLIKE);
+        $result['likeType'] =$this->getLikeTypeForItem($item);
+
+        return $result;
+    }
+    private function getLikeCountByType(Item $item, int $likeType): int{
+        return $this->likeRepository->count(['item'=>$item,'type'=>$likeType]);
+    }
+    private function getLikeTypeForItem(Item $item): int{
+        return empty($this->likeRepository->findOneBy(['item'=>$item,'user'=>$this->getUser()]))
+            ?0
+            :$this->likeRepository->findOneBy(['item'=>$item,'user'=>$this->getUser()])->getType();
     }
 }
