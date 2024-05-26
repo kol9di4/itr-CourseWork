@@ -5,43 +5,80 @@
 {% block body %}
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.1.min.js"></script>
     <script src="{{ asset('js/like-helper.js') }}"></script>
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
 
     <div>
-        <div class="head mb-4">
-            <div class="d-flex justify-content-between">
-                <h2 class="display-4">{{ item.getName|capitalize }}</h2>
-                <h6 class="ms-5 mt-3 text-muted">{{ item.getDateAdd|date("d.m.Y") }}</h6>
+        <div class="header">
+            <div class="collection-block main-card rounded py-4 my-4">
+                <div class="text mb-2">
+                    <div class="text-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex">
+                            <h6 class="me-4 text-muted">Collection : <a href="/collections/1">{{ item.getItemCollection.name }}</a>
+                            </h6>
+                            <h6 class="text-muted">Category : <a href="#">{{ item.getItemCollection.getCategory.name}}</a>
+                            </h6>
+                        </div>
+                        <p class="lead">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>
+                    </div>
+                </div>
+                <h1 class="display-4 text-primary me-4">{{ item.name }}</h1>
+                <div class="lead text-muted mb-4">{{ item.dateAdd|date("d.m.Y") }}</div>
             </div>
-            <a class="h5 text-muted" href="#">Category: {{ item.getItemCollection.getCategory.getName }}</a>
         </div>
-
-
-        {% for attributeString in item.getItemAttributeStringFields %}
-            <h4 class="display-6"><span class="text-primary">{{ attributeString.getCustomItemAttribute.getName}}:</span>  {{ attributeString.getValue }}</h4>
-        {% endfor %}
-        {% for attribute in item.getItemAttributeIntegerFields %}
-            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>  {{ attribute.getValue }}</h4>
-        {% endfor %}
-        {% for attribute in item.getItemAttributeTextFields %}
-            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>  {{ attribute.getValue }}</h4>
-        {% endfor %}
-        {% for attribute in item.getItemAttributeBooleanFields %}
-            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>
-                {% if attribute.isValue == 1  %}
-                    true
-                {% else %}
-                    false
-                {% endif %}
-            </h4>
-        {% endfor %}
-        {% for attribute in item.getItemAttributeDateFields %}
-            <h4  class="display-6"><span class="text-primary">{{ attribute.getCustomItemAttribute.getName}}:</span>  {{ attribute.getValue|date("d.m.Y") }}</h4>
-        {% endfor %}
-
+        <div class="strings">
+            <div class="attribute-card rounded py-2 my-2">
+                {% for attribute in item.getItemAttributeStringFields %}
+                    <div class="lead fs-4 text-primary me-4 float-start">{{ attribute.getCustomItemAttribute.getName}}:</div>
+                    <div class="lead fs-4">{{ attribute.getValue }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="integers">
+            <div class="attribute-card rounded py-2 my-2">
+                {% for attribute in item.getItemAttributeIntegerFields %}
+                    <div class="lead fs-4 text-primary me-4 float-start">{{ attribute.getCustomItemAttribute.getName}}:</div>
+                    <div class="lead fs-4">{{ attribute.getValue }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="texts">
+            <div class="attribute-card rounded py-2 my-2">
+                {% for attribute in item.getItemAttributeTextFields %}
+                    <div class="lead fs-4 text-primary me-4 float-start">{{ attribute.getCustomItemAttribute.getName}}:</div>
+                    <div class="lead fs-4">{{ attribute.getValue }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="booleans">
+            <div class="attribute-card rounded py-2 my-2">
+                {% for attribute in item.getItemAttributeBooleanFields %}
+                        <div class="lead fs-4 text-primary d-flex align-items-center align-self-center">
+                            <div>
+                                {% if attribute.isValue == 1  %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16">
+                                        <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/>
+                                        <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+                                    </svg>
+                                {% else %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                    </svg>
+                                {% endif %}
+                            </div>
+                            <div>
+                                {{ attribute.getCustomItemAttribute.getName}}
+                            </div>
+                        </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="texts">
+            <div class="attribute-card rounded py-2 my-2">
+                {% for attribute in item.getItemAttributeDateFields %}
+                    <div class="lead fs-4 text-primary me-4 float-start">{{ attribute.getCustomItemAttribute.getName}}:</div>
+                    <div class="lead fs-4">{{ attribute.getValue|date("d.m.Y") }}</div>
+                {% endfor %}
+            </div>
+        </div>
 
         <div class="likes">
             {% block likes %}

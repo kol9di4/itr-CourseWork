@@ -4,9 +4,9 @@
 
 {% block body %}
     <div class="header">
-        <div class="collection-block main-card rounded p-4 my-4">
+        <div class="collection-block main-card rounded py-4 my-4">
             <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
-                <h1 class="display-4 text-primary">{{ itemCollection.name }}</h1>
+                <h1 class="display-4 text-primary me-4">{{ itemCollection.name }}</h1>
                 <div class="lead flex-shrink-0">Author : <span class="text-primary">{{ itemCollection.getUser.username }}</span></div>
             </div>
             <div class="lead text-muted mb-4">{{ itemCollection.dateAdd|date("d.m.Y") }}</div>
@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="items">
-        <div class="collections main-card rounded p-4 pb-0 my-4">
+        <div class="collections main-card rounded py-4 pb-0 my-4">
             <h1 class="display-5 text-primary mb-4">Items</h1>
             <div class="items-cards">
                 <div class="row">
