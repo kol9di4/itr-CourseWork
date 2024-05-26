@@ -3,27 +3,83 @@
 {% block title %}Hello CollectionController!{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
-
-    <div class="wrapper">
-            <h1> {{ itemCollection.name }} </h1>
-            <h2> {{ itemCollection.description }} </h2>
-            <h4> {{ itemCollection.dateAdd|date("d.m.Y") }} </h4>
-            <img src="{{ asset('uploads/images/' ~ itemCollection.image.path) }}" width="100" height="100">
-            <hr>
-            {% for item in itemCollection.getItems %}
-                <h1>{{ item.getName }}</h1>
-                <h5>{{ item.getDateAdd|date("d/m/Y") }}</h5>
-                {% for attributeString in item.getItemAttributeStringFields %}
-                    <h6>{{ attributeString.getCustomItemAttribute.getName}} : {{ attributeString.getValue }}</h6>
-                {% endfor %}
-                {% for attributeInteger in item.getItemAttributeIntegerFields %}
-                    <h6>{{ attributeInteger.getCustomItemAttribute.getName}} : {{ attributeInteger.getValue }}</h6>
-                {% endfor %}
-
-            {% endfor %}
+    <div class="header">
+        <div class="collection-block main-card rounded p-4 my-4">
+            <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
+                <h1 class="display-4 text-primary">{{ itemCollection.name }}</h1>
+                <div class="lead flex-shrink-0">Author : <span class="text-primary">{{ itemCollection.getUser.username }}</span></div>
+            </div>
+            <div class="lead text-muted mb-4">{{ itemCollection.dateAdd|date("d.m.Y") }}</div>
+            <div class="description">
+                <div class="col-md-5 col-lg-4 float-end my-2 mx-4">
+                    <img class="img-fluid rounded h-100 w-100 object-fit-cover" src="{{ asset('uploads/images/' ~ itemCollection.image.path) }}">
+                </div>
+                <p class="lead mb-4">
+                    {{ itemCollection.description|capitalize }}
+                </p>
+            </div>
+        </div>
     </div>
+    <div class="items">
+        <div class="collections main-card rounded p-4 pb-0 my-4">
+            <h1 class="display-5 text-primary mb-4">Items</h1>
+            <div class="items-cards">
+                <div class="row">
+                    {% for item in itemCollection.getItems %}
+                        <div class="pb-4 col-12">
+                            <div class="card item h-100">
+                                <div class="row g-0 h-100 overflow-hidden">
+                                    <div class="col-12">
+                                        <div class="card-body h-100 d-flex flex-column justify-content-between">
+                                            <div class="text mb-2">
+                                                <div class="text-header d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex">
+                                                        <h6 class="me-4 text-muted">Collection : <a
+                                                                    href="{{ path('app_collection_view',{'id': item.getItemCollection.getId}) }}">{{ item.getItemCollection.getName }}</a>
+                                                        </h6>
+                                                        <h6 class="text-muted">Category : <a
+                                                                    href="#">{{ item.getItemCollection.getCategory.getName }}</a>
+                                                        </h6>
+                                                    </div>
+                                                    <p class="lead">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>
+                                                </div>
+                                            </div>
+                                            <div class="bottom">
+                                                <div class="footer d-flex justify-content-between align-items-end"
+                                                     style="min-height: 33px">
+                                                    <div class="display-6 card-title">{{ item.getName|capitalize }}</div>
+                                                </div>
+                                                <div class="date-and-button d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted align-middle me-4">{{ item.dateAdd|date("d.m.Y") }}</small>
+                                                    <div>
+                                                        {% if item.getItemCollection.getUser == app.user %}
+                                                            <a href="{{ path('app_item_update',{'idCollection': item.getItemCollection.getId,'idItem':item.getId}) }}"
+                                                               class="btn btn-sm btn-outline-primary">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                     height="16"
+                                                                     fill="currentColor" class="bi bi-pencil"
+                                                                     viewBox="0 0 16 16">
+                                                                    <path
+                                                                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325">
+                                                                    </path>
+                                                                </svg>
+                                                            </a>
+                                                        {% endif %}
+                                                        <a class="btn btn-primary btn-sm"
+                                                           href="{{ path('app_item', {'idCollection': item.getItemCollection.getId, 'idItem' : item.getId}) }}"
+                                                           role="button">View item</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
