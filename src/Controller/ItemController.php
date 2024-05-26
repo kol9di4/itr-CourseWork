@@ -82,6 +82,7 @@ class ItemController extends AbstractController
         return $this->render('item/form.html.twig', [
             'action' => 'create',
             'form' => $form->createView(),
+            'itemCollection' => $itemCollection,
         ]);
     }
 
@@ -99,16 +100,17 @@ class ItemController extends AbstractController
             return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
         }
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);
+        $item->setViews($item->getViews() + 1);
         $comment = new Comment();
         $comment->setItem($item);
         $comment->setUser($this->getUser());
         $commentForm  = $this->createForm(CommentType::class,$comment);
         if ($request->isMethod('POST') && $commentForm->handleRequest($request)->isValid()) {
             $this->entityManager->persist($comment);
-            $this->entityManager->flush();
         }
         $likeCount = $this->likeRepository->count(['item'=>$item,'type'=>1]);
         $dislikeCount = $this->likeRepository->count(['item'=>$item, 'type'=>-1]);
+        $this->entityManager->flush();
         return $this->render('item/view.html.twig', [
             'item' => $item,
             'commentForm' => $commentForm->createView(),
@@ -172,6 +174,7 @@ class ItemController extends AbstractController
         return $this->render('item/form.html.twig', [
             'action' => 'update',
             'form' => $form->createView(),
+            'item' => $item,
         ]);
     }
     private function isItemPartCollection(int $idCollection, int $idItem): bool{

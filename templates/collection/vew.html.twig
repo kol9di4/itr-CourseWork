@@ -2,16 +2,32 @@
 
 {% block title %}Hello CollectionController!{% endblock %}
 
+{% block links %}
+    <a href="{{ path('app_collection') }}">Home</a> /
+    <a href="{{ path('app_collection_view',{'id':itemCollection.id}) }}">{{ itemCollection.name|capitalize }}</a>
+{% endblock %}
+
 {% block body %}
     <div class="header">
-        <div class="collection-block main-card rounded py-4 my-4">
+        <div class="collection-block main-card rounded px-2 py-4 my-4 clearfix">
             <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
-                <h1 class="display-4 text-primary me-4">{{ itemCollection.name }}</h1>
+                <div class="d-flex align-items-center">
+                    <h1 class="display-4 text-primary me-4">{{ itemCollection.name }}</h1>
+                    {% if itemCollection.getUser == app.user %}
+                    <a href="{{ path('app_collection_update',{'id':itemCollection.id}) }}" type="button" class="btn btn-outline-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"></path>
+                        </svg>
+                        <span class="visually-hidden">Button</span>
+                    </a>
+                    {% endif %}
+                </div>
+
                 <div class="lead flex-shrink-0">Author : <span class="text-primary">{{ itemCollection.getUser.username }}</span></div>
             </div>
             <div class="lead text-muted mb-4">{{ itemCollection.dateAdd|date("d.m.Y") }}</div>
             <div class="description">
-                <div class="col-md-5 col-lg-4 float-end my-2 mx-4">
+                <div class="col-md-4 col-lg-3 float-end my-2 mx-4">
                     <img class="img-fluid rounded h-100 w-100 object-fit-cover" src="{{ asset('uploads/images/' ~ itemCollection.image.path) }}">
                 </div>
                 <p class="lead mb-4">
@@ -21,8 +37,19 @@
         </div>
     </div>
     <div class="items">
-        <div class="collections main-card rounded py-4 pb-0 my-4">
-            <h1 class="display-5 text-primary mb-4">Items</h1>
+        <div class="collections main-card rounded px-2 py-4 pb-0 my-4">
+            <div class="d-flex align-items-center">
+                <h1 class="display-5 text-primary mb-4">Items
+                    {% if itemCollection.getUser == app.user %}
+                        <a href="{{ path('app_item_create',{'id':itemCollection.id}) }}" type="button" class="btn btn-outline-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
+                            </svg>
+                        </a>
+                    {% endif %}
+                </h1>
+            </div>
+            {% if itemCollection.getItems|length >0 %}
             <div class="items-cards">
                 <div class="row">
                     {% for item in itemCollection.getItems %}
@@ -33,15 +60,15 @@
                                         <div class="card-body h-100 d-flex flex-column justify-content-between">
                                             <div class="text mb-2">
                                                 <div class="text-header d-flex justify-content-between align-items-center">
-                                                    <div class="d-flex">
-                                                        <h6 class="me-4 text-muted">Collection : <a
+                                                    <div class="d-flex flex-column flex-md-row">
+                                                        <h6 class="me-4 text-muted flex-shrink-0">Collection : <a
                                                                     href="{{ path('app_collection_view',{'id': item.getItemCollection.getId}) }}">{{ item.getItemCollection.getName }}</a>
                                                         </h6>
-                                                        <h6 class="text-muted">Category : <a
+                                                        <h6 class="text-muted  flex-shrink-0">Category : <a
                                                                     href="#">{{ item.getItemCollection.getCategory.getName }}</a>
                                                         </h6>
                                                     </div>
-                                                    <p class="lead">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>
+                                                    <p class="lead  flex-shrink-0">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>
                                                 </div>
                                             </div>
                                             <div class="bottom">
@@ -79,6 +106,9 @@
                     {% endfor %}
                 </div>
             </div>
+            {% else %}
+                <div class="card-title pb-4">No one items for this collection </div>
+            {% endif %}
         </div>
     </div>
 

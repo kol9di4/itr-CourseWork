@@ -13,7 +13,7 @@ p{
 .footer{
     flex-shrink: 0;
 }
-.main-card .attribute-card{
+.main-card, .attribute-card{
     background-color: rgb(251, 250, 255);
 }
 .main-card .collections-cards .card.collection{
@@ -24,4 +24,7 @@ p{
 }
 .collection-block p{
     text-indent: 1.5em;
+}
+.comments-vew .comment{
+    background-color:#f7f7f7;
 }

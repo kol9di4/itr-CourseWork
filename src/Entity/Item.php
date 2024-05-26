@@ -77,6 +77,9 @@ class Item
     #[ORM\OneToMany(targetEntity: ItemAttributeDateField::class, mappedBy: 'item', orphanRemoval: true)]
     private Collection $itemAttributeDateFields;
 
+    #[ORM\Column(type: Types::BIGINT)]
+    private ?string $views = null;
+
     public function __construct()
     {
         $this->tag = new ArrayCollection();
@@ -88,6 +91,7 @@ class Item
         $this->itemAttributeBooleanFields = new ArrayCollection();
         $this->itemAttributeDateFields = new ArrayCollection();
         $this->dateAdd = new \DateTime();
+        $this->setViews(0);
     }
 
     public function getId(): ?int
@@ -361,6 +365,18 @@ class Item
                 $itemAttributeDateField->setItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getViews(): ?string
+    {
+        return $this->views;
+    }
+
+    public function setViews(string $views): static
+    {
+        $this->views = $views;
 
         return $this;
     }
