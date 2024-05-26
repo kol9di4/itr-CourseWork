@@ -98,7 +98,7 @@ class CollectionController extends AbstractController
         return $this->render('collection/form.html.twig', [
             'action' => 'update',
             'form'  => $form,
-            'collection' => $itemCollection,
+            'itemCollection' => $itemCollection,
         ]);
     }
 }

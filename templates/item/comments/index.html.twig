@@ -1,13 +1,23 @@
-<h5 class="mt-4 text-primary comment-count display-6"><span>{{ item.getComments|length }}</span> comments</h5>
-<div class="py-2">
-    <div class="my-0" style="background-color:#0d6efd;height: 2px;"></div>
+
+<h5 class="mt-4 text-primary comment-count display-6">
+    <span>
+        {{ item.getComments|length }}
+    </span>
+    {% if  item.getComments|length == 1  %}
+        comment
+    {% else %}
+        comments
+    {% endif %}
+</h5>
+<div>
+    <div class="my-4" style="background-color:#0d6efd;height: 2px;"></div>
     <div class="comments-vew">
         {% for comment in item.getComments %}
-            <div class="comment my-2 p-2" style="background-color:#f7f7f7;">
+            <div class="comment my-2 p-2 rounded">
                 <div class="container-fluid px-0">
                     <div class="col-12 d-flex justify-content-between">
-                        <div class="h5 text-primary">{{ comment.getUser.getUsername}}</div>
-                        <div class="h6 text-muted">{{ comment.getDateTimeAdd|date()}}</div>
+                        <p class="lead">Author : <span class="text-primary fw-bold">{{ item.getItemCollection.getUser.username }}</span></p>
+                        <div class="h6 text-muted">{{ comment.getDateTimeAdd|date("d.m.Y")}}</div>
                     </div>
                 </div>
                 <p class="ps-4">{{ comment.getText}}</p>
@@ -15,7 +25,7 @@
         {% endfor %}
     </div>
     <!-- end comment -->
-    <div class="comment-new">
+    <div class="comment-new mt-4">
         {{ form_start(commentForm) }}
             <h5>Add new comment:</h5>
             {{ form_errors(commentForm) }}
