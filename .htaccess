@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^task4.great-site.net$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^www.task4.great-site.net$
+RewriteCond %{REQUEST_URI} !public/
+RewriteRule (.*) /public/index.php [L]

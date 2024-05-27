@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ action|capitalize }} Collection{% endblock %}
-
+{% block javascripts %}
+    <script type="application/javascript" src="{{ asset('js/collection-form-helper.js') }}"></script>
+{% endblock %}
 {% block links %}
     {% if itemCollection is defined %}
         <a href="{{ path('app_collection') }}">Home</a> /
@@ -26,6 +28,7 @@
             <p class="mt-2">or choose a new one</p>
         {% endif %}
         {{ form_widget(form.image) }}
+        {{ form_errors(form.image) }}
 
         <label>Custom attributes</label>
         <div

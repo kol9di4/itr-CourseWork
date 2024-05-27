@@ -24,7 +24,7 @@ class ItemAttributeTextField
     #[ORM\JoinColumn(nullable: false)]
     private ?Item $item = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'itemAttributeTextFields')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomItemAttribute $customItemAttribute = null;
 

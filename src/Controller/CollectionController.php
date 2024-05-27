@@ -7,6 +7,7 @@ use App\Service\FileUploader;
 use App\Entity\ItemCollection;
 use App\Entity\Image;
 use App\Form\CollectionType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -53,7 +54,7 @@ class CollectionController extends AbstractController
                 $this->addFlash('success', 'Collection created.');
                 return $this->redirectToRoute('app_collection');
             }
-            $form->get('image')->addError(new FormError('Image cannot be uploaded.'));
+            $form->get('image')->addError(new FormError('Select a picture to upload!'));
         }
 
         return $this->render('collection/form.html.twig', [
@@ -80,9 +81,22 @@ class CollectionController extends AbstractController
             $this->addFlash('error', 'No permissions to edit.');
             return $this->redirectToRoute('app_collection_view',['id' => $itemCollection->getId()]);
         }
+
+        $originalCustomAttributes = new ArrayCollection();
+        foreach ($itemCollection->getCustomItemAttributes() as $customItemAttribute) {
+            $originalCustomAttributes->add($customItemAttribute);
+        }
+
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+//            foreach ($originalCustomAttributes as $customItemAttribute) {
+//                if (false === $itemCollection->getCustomItemAttributes()->contains($customItemAttribute)) {
+//                    dd($customItemAttribute);
+//                    $customItemAttribute->getItemCollection()->removeElement($itemCollection);
+//                    $this->entityManager->persist($customItemAttribute);
+//                }
+//            }
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
