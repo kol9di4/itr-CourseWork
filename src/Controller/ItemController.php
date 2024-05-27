@@ -51,20 +51,6 @@ class ItemController extends AbstractController
             $this->addFlash('success', 'Item created.');
             return $this->redirectToRoute('app_collection_view', ['id'=>$itemCollection->getId()]);
         }
-
-//        if ($form->isSubmitted()) {
-//            $errors = $validator->validate($item);
-////            dd($errors);
-//            if (count($errors) > 0){
-//                return $this->render('item/form.html.twig', [
-//                    'action' => 'create',
-//                    'form' => $form->createView(),
-//                    'itemCollection' => $itemCollection,
-//                    'errors' => $errors,
-//                ]);
-//            }
-//        }
-
         return $this->render('item/form.html.twig', [
             'action' => 'create',
             'form' => $form,

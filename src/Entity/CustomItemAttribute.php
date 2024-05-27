@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\CustomAttributeEnum as CustomAttributeTypeEnum;
 use App\Repository\CustomItemAttributeRepository;
+use App\Validator\CollectionCustomAttribute;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,6 +31,21 @@ class CustomItemAttribute
     #[ORM\ManyToOne(inversedBy: 'customItemAttributes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ItemCollection $itemCollection = null;
+
+    #[ORM\OneToMany(targetEntity: ItemAttributeBooleanField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $itemAttributeBooleanField;
+
+    #[ORM\OneToMany(targetEntity: ItemAttributeDateField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $itemAttributeDateFields;
+
+    #[ORM\OneToMany(targetEntity: ItemAttributeIntegerField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $itemAttributeIntegerField;
+
+    #[ORM\OneToMany(targetEntity: ItemAttributeStringField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $itemAttributeStringField;
+
+    #[ORM\OneToMany(targetEntity: ItemAttributeTextField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $itemAttributeTextField;
 
     public function __construct()
     {
