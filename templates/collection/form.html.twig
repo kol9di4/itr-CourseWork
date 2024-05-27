@@ -30,12 +30,12 @@
         {{ form_widget(form.image) }}
         {{ form_errors(form.image) }}
 
-        <label>Custom attributes</label>
+        <label class="my-3">Custom attributes</label>
         <div
                 id="custom-attributes-wrapper"
                 data-index="{{ form.customItemAttributes|length > 0 ? form.customItemAttributes|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_widget(form.customItemAttributes.vars.prototype)|e('html_attr') }}"
-                class="attribute-card p-2 mb-4"
+                class="attribute-card"
         >
             {% for customAttribute in form.customItemAttributes%}
                 <div class="item">
@@ -44,7 +44,7 @@
             {% endfor %}
         </div>
 
-        <a id="add-custom-attribute" class="btn btn-sm btn-outline-primary" href="">Add attribute</a>
+        <a id="add-custom-attribute" class="btn btn-sm btn-outline-primary mt-4" href="">Add attribute</a>
         {{ form_rest(form) }}
         <button type="submit" class="d-block mt-4 btn btn-outline-primary" formnovalidate>{{ action|capitalize }}</button>
     {{ form_end(form) }}

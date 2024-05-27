@@ -77,12 +77,15 @@ class ItemController extends AbstractController
         $comment->setItem($item);
         $comment->setUser($this->getUser());
         $commentForm  = $this->createForm(CommentType::class,$comment);
+        $likesInfo = $this->getLikesInfo($item);
+
         if ($request->isMethod('POST') && $commentForm->handleRequest($request)->isValid()) {
             $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+            return $this->redirectToRoute('app_item',['idItem'=>$idItem,'idCollection'=>$idCollection]);
         }
 
         $this->entityManager->flush();
-        $likesInfo = $this->getLikesInfo($item);
         return $this->render('item/view.html.twig', array_merge([
             'item' => $item,
             'commentForm' => $commentForm,

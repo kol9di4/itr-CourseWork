@@ -31,12 +31,12 @@
             {{ form_errors(commentForm) }}
             {{ form_row(commentForm.text) }}
             {{ form_rest(commentForm) }}
-            <div>
-                <button type="submit" class="btn btn-primary">Send</button>
+            <div class="send-comment-block">
+                <button type="submit" class="btn btn-primary" id="send-comment" formnovalidate>Send</button>
             </div>
         {{ form_end(commentForm) }}
         <div class="m-5 row justify-content-center comment-again" style="display: none;">
-            <button type="button" class="btn btn-primary">Send one more comement</button>
+            <button type="button" class="btn btn-primary">Post another comment</button>
         </div>
     </div>
 </div>

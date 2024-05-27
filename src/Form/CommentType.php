@@ -15,9 +15,6 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('text',TextareaType::class,[
-                'constraints' => [
-                    new Assert\NotBlank()
-                ],
                 'empty_data' => '',
                 'label' => false,
             ])
