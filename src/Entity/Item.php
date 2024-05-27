@@ -18,8 +18,8 @@ class Item
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-//    #[Assert\NotBlank]
-//    #[Assert\Length(min: 3,max: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3,max: 255)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -29,6 +29,7 @@ class Item
      * @var Collection<int, Tag>
      */
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items')]
+    #[Assert\NotBlank]
     private Collection $tag;
 
     #[ORM\ManyToOne(inversedBy: 'item')]

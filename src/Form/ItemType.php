@@ -16,10 +16,6 @@ class ItemType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(min: 3,max: 255),
-                ],
                 'empty_data' => '',
             ])
             ->add('tag', EntityType::class, [

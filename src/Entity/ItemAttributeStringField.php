@@ -15,6 +15,8 @@ class ItemAttributeStringField
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3,max: 255)]
     private ?string $value = null;
 
     #[ORM\ManyToOne(inversedBy: 'itemAttributeStringFields')]

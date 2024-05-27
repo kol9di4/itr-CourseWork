@@ -15,6 +15,7 @@ class ItemAttributeIntegerField
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?int $value = null;
 
     #[ORM\ManyToOne(inversedBy: 'itemAttributeIntegerFields')]

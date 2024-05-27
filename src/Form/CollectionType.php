@@ -21,9 +21,9 @@ class CollectionType extends AbstractType
     {
         $builder
             ->add('name', TextType::class,[
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
+//                'constraints' => [
+//                    new Assert\NotBlank(),
+//                ],
             ])
             ->add('description')
             ->add('image', FileType::class, [
@@ -31,7 +31,7 @@ class CollectionType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'constraints' => [
-                    new Assert\NotBlank(),
+//                    new Assert\NotBlank(),
                     new File([
                         'maxSize' => '1024k',
                         'mimeTypes' => [
@@ -42,7 +42,7 @@ class CollectionType extends AbstractType
                             'image/svg+xml',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid jpeg/png/gif/svg/bmp',
-                    ])
+                    ]),
                 ],
             ])
             ->add('customItemAttributes', SymfonyCollectionType::class, [
