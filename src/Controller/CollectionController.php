@@ -9,6 +9,7 @@ use App\Entity\Image;
 use App\Form\CollectionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -52,6 +53,7 @@ class CollectionController extends AbstractController
                 $this->addFlash('success', 'Collection created.');
                 return $this->redirectToRoute('app_collection');
             }
+            $form->get('image')->addError(new FormError('Image cannot be uploaded.'));
         }
 
         return $this->render('collection/form.html.twig', [
