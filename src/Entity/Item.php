@@ -51,31 +51,31 @@ class Item
     /**
      * @var Collection<int, ItemAttributeStringField>
      */
-    #[ORM\OneToMany(targetEntity: ItemAttributeStringField::class, mappedBy: 'item', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ItemAttributeStringField::class, mappedBy: 'item', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $itemAttributeStringFields;
 
     /**
      * @var Collection<int, ItemAttributeIntegerField>
      */
-    #[ORM\OneToMany(targetEntity: ItemAttributeIntegerField::class, mappedBy: 'item', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ItemAttributeIntegerField::class, mappedBy: 'item', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $itemAttributeIntegerFields;
 
     /**
      * @var Collection<int, ItemAttributeTextField>
      */
-    #[ORM\OneToMany(targetEntity: ItemAttributeTextField::class, mappedBy: 'item', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ItemAttributeTextField::class, mappedBy: 'item', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $itemAttributeTextFields;
 
     /**
      * @var Collection<int, ItemAttributeBooleanField>
      */
-    #[ORM\OneToMany(targetEntity: ItemAttributeBooleanField::class, mappedBy: 'item', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ItemAttributeBooleanField::class, mappedBy: 'item', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $itemAttributeBooleanFields;
 
     /**
      * @var Collection<int, ItemAttributeDateField>
      */
-    #[ORM\OneToMany(targetEntity: ItemAttributeDateField::class, mappedBy: 'item', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ItemAttributeDateField::class, mappedBy: 'item', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $itemAttributeDateFields;
 
     #[ORM\Column(type: Types::BIGINT)]

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Const\LikeTypeConst;
 use App\Entity\Comment;
 use App\Entity\CustomItemAttribute;
 use App\Entity\Item;
@@ -15,6 +14,7 @@ use App\Entity\ItemCollection;
 use App\Entity\Like;
 use App\Entity\User;
 use App\Enum\CustomAttributeEnum;
+use App\Enum\LikeTypesEnum;
 use App\Form\CommentType;
 use App\Form\ItemType;
 use App\Repository\ItemCollectionRepository;
@@ -25,7 +25,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ItemController extends AbstractController
@@ -96,10 +95,10 @@ class ItemController extends AbstractController
     {
         $user = $this->getUser();
         $likeType = (int)$request->request->get('likeType')===1
-            ? LikeTypeConst::LIKE
-            : LikeTypeConst::DISLIKE;
+            ? LikeTypesEnum::Like
+            : LikeTypesEnum::Dislike;
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);
-        $this->setLike($item, $user, $likeType);
+        $this->setLike($item, $user, $likeType->value);
         $this->entityManager->flush();
         $likesInfo = $this->getLikesInfo($item);
         $likeDiv = $this->render('item/like/index.html.twig',
@@ -189,13 +188,13 @@ class ItemController extends AbstractController
     private function getLikesInfo(Item $item): array
     {
         $result = [];
-        $result['likeCount'] = $this->getLikeCountByType($item,LikeTypeConst::LIKE);
-        $result['dislikeCount'] = $this->getLikeCountByType($item,LikeTypeConst::DISLIKE);
+        $result['likeCount'] = $this->getLikeCountByType($item,LikeTypesEnum::Like);
+        $result['dislikeCount'] = $this->getLikeCountByType($item,LikeTypesEnum::Dislike);
         $result['likeType'] =$this->getLikeTypeForItem($item);
 
         return $result;
     }
-    private function getLikeCountByType(Item $item, int $likeType): int{
+    private function getLikeCountByType(Item $item, LikeTypesEnum $likeType): int{
         return $this->likeRepository->count(['item'=>$item,'type'=>$likeType]);
     }
     private function getLikeTypeForItem(Item $item): int{
