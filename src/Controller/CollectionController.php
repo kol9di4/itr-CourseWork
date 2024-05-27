@@ -53,7 +53,7 @@ class CollectionController extends AbstractController
                 $this->addFlash('success', 'Collection created.');
                 return $this->redirectToRoute('app_collection');
             }
-            $form->get('image')->addError(new FormError('Image cannot be uploaded.'));
+            $form->get('image')->addError(new FormError('Select a picture to upload!'));
         }
 
         return $this->render('collection/form.html.twig', [

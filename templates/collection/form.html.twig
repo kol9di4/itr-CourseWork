@@ -26,6 +26,7 @@
             <p class="mt-2">or choose a new one</p>
         {% endif %}
         {{ form_widget(form.image) }}
+        {{ form_errors(form.image) }}
 
         <label>Custom attributes</label>
         <div
