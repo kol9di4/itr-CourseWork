@@ -17,7 +17,7 @@ class Comment
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 4294967295)]
+    #[Assert\Length(min: 1, max: 4294967295)]
     private ?string $text = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
