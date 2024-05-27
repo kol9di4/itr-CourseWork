@@ -16,6 +16,8 @@ class ItemAttributeTextField
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 4294967295)]
     private ?string $value = null;
 
     #[ORM\ManyToOne(inversedBy: 'itemAttributeTextFields')]

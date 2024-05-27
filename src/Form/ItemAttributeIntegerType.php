@@ -21,10 +21,11 @@ class ItemAttributeIntegerType extends AbstractType
             $form
                 ->add('value', IntegerType::class, [
                     'label' => $customItemAttributeName,
-//                    'constraints' => [
-//                        new Assert\NotBlank(),
-//                        new Assert\Range(['min' => -2147483648, 'max' => 2147483647]),
-//                    ]
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Range(['min' => -2147483648, 'max' => 2147483647]),
+                    ],
+                    'empty_data' => [],
                 ]);
         });
     }

@@ -12,6 +12,7 @@ function addCollectionAttribute(){
             /__name__/g,
             collectionHolder.dataset.index
         );
+    document.querySelector('#custom-attributes-wrapper').classList.remove('d-none');
 
     collectionHolder.appendChild(item);
 
@@ -22,6 +23,7 @@ function addCollectionAttribute(){
 function addRemoveAttributeButton(item) {
     const removeFormButton = document.createElement('a');
     removeFormButton.setAttribute('href', '#')
+    removeFormButton.className = ("btn btn-sm btn-outline-primary mb-4");
     removeFormButton.innerText = 'Delete attribute';
 
     item.append(removeFormButton);

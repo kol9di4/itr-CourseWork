@@ -21,10 +21,11 @@ class ItemAttributeStringType extends AbstractType
             $form
                 ->add('value', TextType::class, [
                     'label' => $customItemAttributeName,
-//                    'constraints' => [
-//                        new Assert\NotBlank(),
-//                        new Assert\Length(['min' => 3, 'max' => 255]),
-//                    ]
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Length(['min' => 3, 'max' => 255]),
+                    ],
+                    'empty_data' => '',
                 ]);
         });
     }

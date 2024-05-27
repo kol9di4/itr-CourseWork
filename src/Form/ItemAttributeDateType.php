@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Cassandra\Date;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\ItemAttributeDateField;
 use Symfony\Component\Form\AbstractType;
@@ -21,10 +22,10 @@ class ItemAttributeDateType extends AbstractType
             $form
                 ->add('value', DateType::class, [
                     'label' => $customItemAttributeName,
-//                    'constraints' => [
-//                        new Assert\NotBlank(),
-//                        new Assert\Date(),
-//                    ]
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                    'empty_data' => null,
                 ]);
         });
     }

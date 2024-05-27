@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ action|capitalize }} Collection{% endblock %}
 
 {% block links %}
     {% if itemCollection is defined %}
@@ -12,19 +13,26 @@
 {% endblock %}
 
 {% block body %}
-<h1>Action {{action}}</h1>
+<h1>{{action|capitalize}} collection</h1>
     {{ form_start(form) }}
         {{ form_errors(form) }}
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
         {{ form_row(form.category) }}
-        {{ form_row(form.image) }}
+
+        {{ form_label(form.image) }}
+        {% if action != 'create' %}
+            <img src="{{ asset('uploads/images/' ~ itemCollection.image.path) }}" class="d-block" style="width: 200px">
+            <p class="mt-2">or choose a new one</p>
+        {% endif %}
+        {{ form_widget(form.image) }}
 
         <label>Custom attributes</label>
         <div
                 id="custom-attributes-wrapper"
                 data-index="{{ form.customItemAttributes|length > 0 ? form.customItemAttributes|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_widget(form.customItemAttributes.vars.prototype)|e('html_attr') }}"
+                class="attribute-card p-2 mb-4"
         >
             {% for customAttribute in form.customItemAttributes%}
                 <div class="item">
@@ -33,8 +41,8 @@
             {% endfor %}
         </div>
 
-        <a id="add-custom-attribute" class="d-block" href="#">Add attribute</a>
+        <a id="add-custom-attribute" class="btn btn-sm btn-outline-primary" href="">Add attribute</a>
         {{ form_rest(form) }}
-        <button type="submit" class="btn btn-outline-primary" formnovalidate>{{ action|capitalize }}</button>
+        <button type="submit" class="d-block mt-4 btn btn-outline-primary" formnovalidate>{{ action|capitalize }}</button>
     {{ form_end(form) }}
 {% endblock %}

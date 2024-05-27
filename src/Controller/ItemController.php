@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ItemController extends AbstractController
 {
@@ -38,7 +39,7 @@ class ItemController extends AbstractController
     ){}
 
     #[Route('/collections/{id}/items/create', name: 'app_item_create', methods: ['GET','POST'])]
-    public function index(Request $request,ItemCollection $itemCollection): Response
+    public function index(Request $request,ItemCollection $itemCollection,ValidatorInterface $validator): Response
     {
         $item = $this->setAttributesToAnItem($itemCollection);
         $form = $this->createForm(ItemType::class, $item);
@@ -50,10 +51,25 @@ class ItemController extends AbstractController
             $this->addFlash('success', 'Item created.');
             return $this->redirectToRoute('app_collection_view', ['id'=>$itemCollection->getId()]);
         }
+
+//        if ($form->isSubmitted()) {
+//            $errors = $validator->validate($item);
+////            dd($errors);
+//            if (count($errors) > 0){
+//                return $this->render('item/form.html.twig', [
+//                    'action' => 'create',
+//                    'form' => $form->createView(),
+//                    'itemCollection' => $itemCollection,
+//                    'errors' => $errors,
+//                ]);
+//            }
+//        }
+
         return $this->render('item/form.html.twig', [
             'action' => 'create',
-            'form' => $form->createView(),
+            'form' => $form,
             'itemCollection' => $itemCollection,
+            'errors' => '',
         ]);
     }
 
@@ -84,7 +100,7 @@ class ItemController extends AbstractController
         $likesInfo = $this->getLikesInfo($item);
         return $this->render('item/view.html.twig', array_merge([
             'item' => $item,
-            'commentForm' => $commentForm->createView(),
+            'commentForm' => $commentForm,
         ],$likesInfo)
         );
     }
@@ -131,7 +147,7 @@ class ItemController extends AbstractController
 
         return $this->render('item/form.html.twig', [
             'action' => 'update',
-            'form' => $form->createView(),
+            'form' => $form,
             'item' => $item,
         ]);
     }
