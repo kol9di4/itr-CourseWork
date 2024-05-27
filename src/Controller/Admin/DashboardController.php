@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use App\Entity\Comment;
+use App\Entity\Item;
 use App\Entity\ItemCollection;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -36,7 +38,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Itr CourseWork');
+            ->setTitle('Admin Panel');
     }
 
     public function configureMenuItems(): iterable
@@ -47,6 +49,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Collections');
         yield MenuItem::linkToCrud('Collection Category', 'fa fa-medium', Category::class);
         yield MenuItem::linkToCrud('Collections', 'fa fa-list', ItemCollection::class);
+        yield MenuItem::linkToCrud('Items', 'fas fa-box', Item::class);
+        yield MenuItem::linkToCrud('Comments', 'fa fa-comments', Comment::class);
 
     }
 }
