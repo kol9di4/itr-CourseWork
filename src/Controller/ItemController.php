@@ -97,6 +97,9 @@ class ItemController extends AbstractController
     public function like(Request $request, int $idCollection, int $idItem): void
     {
         $user = $this->getUser();
+        if(!isset($user)){
+//            logic for unauth user
+        }
         $likeType = (int)$request->request->get('likeType')===1
             ? LikeTypesEnum::Like
             : LikeTypesEnum::Dislike;
