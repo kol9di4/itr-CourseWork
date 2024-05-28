@@ -27,6 +27,16 @@ class ItemRepository extends ServiceEntityRepository
                 ->getResult()
             ;
         }
+//        public function findLargestCollections(){
+//            return $this->createQueryBuilder('i')
+//                ->select('i.itemCollection')
+//                ->groupBy('i.itemCollection')
+//                ->having('count(i)>1')
+//                ->orderBy('count(i)','desc')
+//                ->setMaxResults(6)
+//                ->getQuery()
+//                ->getResult();
+//        }
 
     //    public function findOneBySomeField($value): ?Item
     //    {

@@ -16,11 +16,11 @@ class ItemCollectionRepository extends ServiceEntityRepository
         parent::__construct($registry, ItemCollection::class);
     }
 
-    public function findTop(int $value): array
+    public function findTop($value): array
     {
-        return $this->createQueryBuilder('c')
-            ->orderBy()
-            ->setMaxResults($value)
+        return $this->createQueryBuilder('i')
+//            ->orderBy('i.items','ASC')
+            ->setMaxResults(6)
             ->getQuery()
             ->getResult()
         ;
