@@ -13,6 +13,11 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         {% endblock %}
+        <script>
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+        </script>
     </head>
     <body>
 
@@ -21,7 +26,7 @@
     {% endblock %}
 
     <div class="container mt-3 px-4">
-        {% block links %}<a href="{{ path('app_collection') }}">Home</a>{% endblock %}
+        {% block links %}<a href="{{ path('app') }}">Home</a>{% endblock %}
     </div>
 
     {% block flashes %}

@@ -3,7 +3,7 @@
 {% block title %}Collections of the category "{{ category }}"{% endblock %}
 
 {% block links %}
-    <a href="{{ path('app_collection') }}">Home</a> /
+    <a href="{{ path('app') }}">Home</a> /
     <a href="{{ path('app_collection_category',{'category':category}) }}">{{ category|capitalize }}</a>
 {% endblock %}
 

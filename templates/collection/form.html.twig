@@ -6,10 +6,10 @@
 {% endblock %}
 {% block links %}
     {% if itemCollection is defined %}
-        <a href="{{ path('app_collection') }}">Home</a> /
+        <a href="{{ path('app') }}">Home</a> /
         <a href="{{ path('app_collection_view',{'id':itemCollection.id}) }}">{{ itemCollection.name|capitalize }} (update)</a>
     {% else %}
-        <a href="{{ path('app_collection') }}">Home</a> /
+        <a href="{{ path('app') }}">Home</a> /
         New Collection
     {% endif %}
 {% endblock %}

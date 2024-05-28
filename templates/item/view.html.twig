@@ -3,7 +3,7 @@
 {% block title %}{{ item.name }}{% endblock %}
 
 {% block links %}
-    <a href="{{ path('app_collection') }}">Home</a> /
+    <a href="{{ path('app') }}">Home</a> /
     <a href="{{ path('app_collection_view',{'id':item.getItemCollection.id}) }}">{{ item.getItemCollection.name|capitalize }}</a> /
     <a href="{{ path('app_item',{'idCollection':item.getItemCollection.id, 'idItem': item.id}) }}">{{ item.name|capitalize }}</a>
 {% endblock %}
