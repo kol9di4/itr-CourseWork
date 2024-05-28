@@ -14,6 +14,7 @@ use App\Entity\Image;
 use App\Form\CollectionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,10 +28,17 @@ class CollectionController extends AbstractController
     ){}
 
     #[Route('/collections', name: 'app_collection')]
-    public function index(ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository): Response
+    public function index(Request $request, ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository, PaginatorInterface $paginator): Response
     {
         $items = $itemRepository->findAllSortedByDate();
         $collections = $itemCollectionRepository->findAll();
+
+        $items = $paginator->paginate(
+            $items, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            5 /*limit per page*/
+        );
+
         usort($collections, function($c1, $c2){
             return count($c1->getItems()) < count($c2->getItems());
         });
@@ -62,7 +70,7 @@ class CollectionController extends AbstractController
             $this->entityManager->persist($itemCollection);
             $this->entityManager->flush();
             $this->addFlash('success', 'Collection created.');
-            return $this->redirectToRoute('app_collection');
+            return $this->redirectToRoute('app');
         }
 
         return $this->render('collection/form.html.twig', [
@@ -118,7 +126,7 @@ class CollectionController extends AbstractController
 
             $this->entityManager->flush();
             $this->addFlash('success', 'Collection updated.');
-            return $this->redirectToRoute('app_collection',['id' => $itemCollection->getId()]);
+            return $this->redirectToRoute('app');
         }
 
         return $this->render('collection/form.html.twig', [

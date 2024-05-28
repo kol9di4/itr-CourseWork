@@ -4,12 +4,12 @@
 
 {% block links %}
         {% if item is defined %}
-                <a href="{{ path('app_collection') }}">Home</a> /
+                <a href="{{ path('app') }}">Home</a> /
                 <a href="{{ path('app_collection_view',{'id':item.getItemCollection.id}) }}">{{ item.getItemCollection.name|capitalize }}</a> /
                 <a href="{{ path('app_item',{'idCollection':item.getItemCollection.id, 'idItem': item.id}) }}">{{ item.name|capitalize }}
                         (update)</a>
         {% else %}
-                <a href="{{ path('app_collection') }}">Home</a> /
+                <a href="{{ path('app') }}">Home</a> /
                 <a href="{{ path('app_collection_view',{'id':itemCollection.id}) }}">{{ itemCollection.name|capitalize }}</a> /
                 New Item
         {% endif %}
