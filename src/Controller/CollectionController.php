@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\User;
-use App\Enum\PageSettings;
 use App\Repository\CategoryRepository;
 use App\Repository\ItemCollectionRepository;
-use App\Repository\ItemRepository;
 use App\Service\FileUploader;
 use App\Entity\ItemCollection;
 use App\Entity\Image;
@@ -16,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

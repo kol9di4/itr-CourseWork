@@ -36,13 +36,13 @@
                             {{app.user.username}}
                         </a>
                         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                            <li><a class="dropdown-item" href="{{ path('app_collection_create') }}">New Collection</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_collection_create') }}"><i class='fa fa-plus me-2'></i>New Collection</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_profile',{'userName':app.user.username}) }}"><i class='fa fa-user me-2'></i>Profile</a></li>
                             {% if is_granted('ROLE_ADMIN') %}
-                                <li><a class="dropdown-item" href="{{ path('admin') }}">Admin Panel</a></li>
+                                <li><a class="dropdown-item" href="{{ path('admin') }}"><i class='fas fa-user-cog me-2'></i>Admin Panel</a></li>
                             {% endif %}
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Sign out</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class='fa fa-sign-out me-2'></i>Sign out</a></li>
                         </ul>
                     </div>
                     {% endif %}
