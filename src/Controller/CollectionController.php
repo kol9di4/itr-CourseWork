@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\User;
+use App\Enum\PageSettings;
 use App\Repository\CategoryRepository;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
@@ -28,9 +29,12 @@ class CollectionController extends AbstractController
     #[Route('/collections', name: 'app_collection')]
     public function index(ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository): Response
     {
-        $collections = $itemCollectionRepository->findTop(6);
-//        $items = $itemRepository->findAllSortedByDate();
-        $items = $itemRepository->findAll();
+        $items = $itemRepository->findAllSortedByDate();
+        $collections = $itemCollectionRepository->findAll();
+        usort($collections, function($c1, $c2){
+            return count($c1->getItems()) < count($c2->getItems());
+        });
+        $collections = array_slice($collections,0, PageSettings::CountCollectionsForMainPage->value);
         return $this->render('collection/index.html.twig', [
             'collections' => $collections,
             'items' => $items,
@@ -41,24 +45,24 @@ class CollectionController extends AbstractController
     public function create(Request $request, FileUploader $fileUploader): Response
     {
         $itemCollection = new ItemCollection();
+        $image = (new Image())->setPath('no-image.jpg');
+        $itemCollection->setImage($image);
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $image = new Image();
                 $image->setPath($imageFileName);
-                $user = $this->getUser();
-                $itemCollection->setImage($image);
-                $itemCollection->setUser($user);
-                $this->entityManager->persist($image);
-                $this->entityManager->persist($itemCollection);
-                $this->entityManager->flush();
-                $this->addFlash('success', 'Collection created.');
-                return $this->redirectToRoute('app_collection');
             }
-            $form->get('image')->addError(new FormError('Select a picture to upload!'));
+            $user = $this->getUser();
+            $itemCollection->setImage($image);
+            $itemCollection->setUser($user);
+            $this->entityManager->persist($image);
+            $this->entityManager->persist($itemCollection);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Collection created.');
+            return $this->redirectToRoute('app_collection');
         }
 
         return $this->render('collection/form.html.twig', [

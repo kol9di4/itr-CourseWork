@@ -33,7 +33,6 @@ class ItemCollection
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-//    #[Assert\NotBlank]
     private ?Image $image = null;
 
     /**
