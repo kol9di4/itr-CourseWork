@@ -31,7 +31,7 @@
             {% endfor %}
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="my-2 alert flash-{{ label }}">
+                    <div class="my-2 alert alert-{{ label }}">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -39,11 +39,6 @@
         </div>
     {% endblock %}
     <div class="container main px-4">
-{#        {% block left_menu %}#}
-{#            <div class="">#}
-
-{#            </div>#}
-{#        {% endblock %}#}
         {% block body %}
         {% endblock %}
     </div>

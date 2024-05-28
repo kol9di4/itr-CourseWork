@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
+use App\Entity\User;
+use App\Enum\PageSettings;
+use App\Repository\CategoryRepository;
 use App\Repository\ItemCollectionRepository;
+use App\Repository\ItemRepository;
 use App\Service\FileUploader;
 use App\Entity\ItemCollection;
 use App\Entity\Image;
@@ -22,39 +27,42 @@ class CollectionController extends AbstractController
     ){}
 
     #[Route('/collections', name: 'app_collection')]
-    public function index(ItemCollectionRepository $itemCollectionRepository): Response
+    public function index(ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository): Response
     {
+        $items = $itemRepository->findAllSortedByDate();
         $collections = $itemCollectionRepository->findAll();
+        usort($collections, function($c1, $c2){
+            return count($c1->getItems()) < count($c2->getItems());
+        });
+        $collections = array_slice($collections,0, PageSettings::CountCollectionsForMainPage->value);
         return $this->render('collection/index.html.twig', [
-            'controller_name' => 'CollectionController',
             'collections' => $collections,
+            'items' => $items,
         ]);
     }
-
-
 
     #[Route('/collections/create', name: 'app_collection_create', methods: ['GET', 'POST'])]
     public function create(Request $request, FileUploader $fileUploader): Response
     {
         $itemCollection = new ItemCollection();
+        $image = (new Image())->setPath('no-image.jpg');
+        $itemCollection->setImage($image);
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $image = new Image();
                 $image->setPath($imageFileName);
-                $user = $this->getUser();
-                $itemCollection->setImage($image);
-                $itemCollection->setUser($user);
-                $this->entityManager->persist($image);
-                $this->entityManager->persist($itemCollection);
-                $this->entityManager->flush();
-                $this->addFlash('success', 'Collection created.');
-                return $this->redirectToRoute('app_collection');
             }
-            $form->get('image')->addError(new FormError('Select a picture to upload!'));
+            $user = $this->getUser();
+            $itemCollection->setImage($image);
+            $itemCollection->setUser($user);
+            $this->entityManager->persist($image);
+            $this->entityManager->persist($itemCollection);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Collection created.');
+            return $this->redirectToRoute('app_collection');
         }
 
         return $this->render('collection/form.html.twig', [
@@ -62,23 +70,32 @@ class CollectionController extends AbstractController
             'form'  => $form
         ]);
     }
-    #[Route('/collections/{id}', name: 'app_collection_view')]
+
+    #[Route('/collections/{id}', name: 'app_collection_view', requirements: ['id' => '\d+'])]
     public function view(ItemCollection $itemCollection): Response
     {
         return $this->render('collection/vew.html.twig', [
             'controller_name' => 'View',
-            'itemCollection' => $itemCollection,
+            'collection' => $itemCollection,
+        ]);
+    }
+
+    #[Route('/collections/{category}', name: 'app_collection_category')]
+    public function category(ItemCollectionRepository $itemCollectionRepository,CategoryRepository $categoryRepository ,string $category): Response
+    {
+        $categoryObj = $categoryRepository->findBy(['name' => $category]);
+        $collections = $itemCollectionRepository->findBy(['category' => $categoryObj]);
+        return $this->render('collection/category-filter.html.twig', [
+            'category' => $category,
+            'collections' => $collections,
         ]);
     }
 
     #[Route('/collections/{id}/update', name: 'app_collection_update', methods: ['GET', 'POST'])]
     public function update(Request $request, FileUploader $fileUploader, ItemCollection $itemCollection): Response
     {
-        $user = $this->getUser();
-        $isUserMatched = $user->getId() === $itemCollection->getUser()->getId();
-        $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
-        if(!($isUserMatched || $isSetRole)) {
-            $this->addFlash('error', 'No permissions to edit.');
+        if(!$this->isHaveRightsForEdit($itemCollection->getUser())) {
+            $this->addFlash('danger', 'No permissions to edit.');
             return $this->redirectToRoute('app_collection_view',['id' => $itemCollection->getId()]);
         }
 
@@ -90,13 +107,6 @@ class CollectionController extends AbstractController
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            foreach ($originalCustomAttributes as $customItemAttribute) {
-//                if (false === $itemCollection->getCustomItemAttributes()->contains($customItemAttribute)) {
-//                    dd($customItemAttribute);
-//                    $customItemAttribute->getItemCollection()->removeElement($itemCollection);
-//                    $this->entityManager->persist($customItemAttribute);
-//                }
-//            }
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
@@ -116,6 +126,12 @@ class CollectionController extends AbstractController
             'form'  => $form,
             'itemCollection' => $itemCollection,
         ]);
+    }
+    private function isHaveRightsForEdit(User $autor){
+        $user = $this->getUser();
+        $isUserMatched = $user->getId() === $autor->getId();
+        $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
+        return ($isUserMatched || $isSetRole);
     }
 }
 

@@ -19,17 +19,24 @@ class ItemRepository extends ServiceEntityRepository
     //    /**
     //     * @return Item[] Returns an array of Item objects
     //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('i.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+        public function findAllSortedByDate(): array
+        {
+            return $this->createQueryBuilder('i')
+                ->orderBy('i.dateAdd', 'DESC')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+//        public function findLargestCollections(){
+//            return $this->createQueryBuilder('i')
+//                ->select('i.itemCollection')
+//                ->groupBy('i.itemCollection')
+//                ->having('count(i)>1')
+//                ->orderBy('count(i)','desc')
+//                ->setMaxResults(6)
+//                ->getQuery()
+//                ->getResult();
+//        }
 
     //    public function findOneBySomeField($value): ?Item
     //    {

@@ -25,7 +25,12 @@
         {% endfor %}
     </div>
     <!-- end comment -->
+
+
     <div class="comment-new mt-4">
+        {% if app.user is null %}
+            <h5 class="text-danger">Only registered users can post comments!</h5>
+        {% else %}
         {{ form_start(commentForm) }}
             <h5>Add new comment:</h5>
             {{ form_errors(commentForm) }}
@@ -38,5 +43,6 @@
         <div class="m-5 row justify-content-center comment-again" style="display: none;">
             <button type="button" class="btn btn-primary">Post another comment</button>
         </div>
+        {% endif %}
     </div>
 </div>
