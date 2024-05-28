@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use App\Repository\ItemCollectionRepository;
+use App\Repository\ItemRepository;
 use App\Service\FileUploader;
 use App\Entity\ItemCollection;
 use App\Entity\Image;
@@ -22,16 +25,15 @@ class CollectionController extends AbstractController
     ){}
 
     #[Route('/collections', name: 'app_collection')]
-    public function index(ItemCollectionRepository $itemCollectionRepository): Response
+    public function index(ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository): Response
     {
-        $collections = $itemCollectionRepository->findAll();
+        $collections = $itemCollectionRepository->findTop(6);
+        $items = $itemRepository->findAllSortedByDate();
         return $this->render('collection/index.html.twig', [
-            'controller_name' => 'CollectionController',
             'collections' => $collections,
+            'items' => $items,
         ]);
     }
-
-
 
     #[Route('/collections/create', name: 'app_collection_create', methods: ['GET', 'POST'])]
     public function create(Request $request, FileUploader $fileUploader): Response
@@ -62,12 +64,24 @@ class CollectionController extends AbstractController
             'form'  => $form
         ]);
     }
-    #[Route('/collections/{id}', name: 'app_collection_view')]
+
+    #[Route('/collections/{id}', name: 'app_collection_view', requirements: ['id' => '\d+'])]
     public function view(ItemCollection $itemCollection): Response
     {
         return $this->render('collection/vew.html.twig', [
             'controller_name' => 'View',
-            'itemCollection' => $itemCollection,
+            'collection' => $itemCollection,
+        ]);
+    }
+
+    #[Route('/collections/{category}', name: 'app_collection_category')]
+    public function category(ItemCollectionRepository $itemCollectionRepository,CategoryRepository $categoryRepository ,string $category): Response
+    {
+        $categoryObj = $categoryRepository->findBy(['name' => $category]);
+        $collections = $itemCollectionRepository->findBy(['category' => $categoryObj]);
+        return $this->render('collection/category-filter.html.twig', [
+            'category' => $category,
+            'collections' => $collections,
         ]);
     }
 

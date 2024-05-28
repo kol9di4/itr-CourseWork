@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ itemCollection.name }}{% endblock %}
+{% block title %}{{ collection.name }}{% endblock %}
 
 {% block links %}
     <a href="{{ path('app_collection') }}">Home</a> /
-    <a href="{{ path('app_collection_view',{'id':itemCollection.id}) }}">{{ itemCollection.name|capitalize }}</a>
+    <a href="{{ path('app_collection_view',{'id':collection.id}) }}">{{ collection.name|capitalize }}</a>
 {% endblock %}
 
 {% block body %}
@@ -12,9 +12,9 @@
         <div class="collection-block main-card rounded px-2 py-4 my-4 clearfix">
             <div class="d-flex flex-wrap flex-md-nowrap justify-content-between">
                 <div class="d-flex align-items-center">
-                    <h1 class="display-4 text-primary me-4">{{ itemCollection.name }}</h1>
-                    {% if (itemCollection.getUser == app.user or is_granted('ROLE_ADMIN')) %}
-                    <a href="{{ path('app_collection_update',{'id':itemCollection.id}) }}" type="button" class="btn btn-outline-primary">
+                    <h1 class="display-4 text-primary me-4">{{ collection.name }}</h1>
+                    {% if (collection.getUser == app.user or is_granted('ROLE_ADMIN')) %}
+                    <a href="{{ path('app_collection_update',{'id':collection.id}) }}" type="button" class="btn btn-outline-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                             <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"></path>
                         </svg>
@@ -23,15 +23,18 @@
                     {% endif %}
                 </div>
 
-                <div class="lead flex-shrink-0">Author : <span class="text-primary">{{ itemCollection.getUser.username }}</span></div>
+                <div class="lead flex-shrink-0">Author : <span class="text-primary">{{ collection.getUser.username }}</span></div>
             </div>
-            <div class="lead text-muted mb-4">{{ itemCollection.dateAdd|date("d.m.Y") }}</div>
+            <div class="text-muted  flex-shrink-0">Category : <a
+                        href="{{ path('app_collection_category',{'category':collection.getCategory.name}) }}">{{ collection.getCategory.name }}</a>
+            </div>
+            <div class="lead text-muted mb-4">{{ collection.dateAdd|date("d.m.Y") }}</div>
             <div class="description">
                 <div class="col-md-4 col-lg-3 float-end my-2 mx-4">
-                    <img class="img-fluid rounded h-100 w-100 object-fit-cover" src="{{ asset('uploads/images/' ~ itemCollection.image.path) }}">
+                    <img class="img-fluid rounded h-100 w-100 object-fit-cover" src="{{ asset('uploads/images/' ~ collection.image.path) }}">
                 </div>
                 <p class="lead mb-4">
-                    {{ itemCollection.description|capitalize }}
+                    {{ collection.description|capitalize }}
                 </p>
             </div>
         </div>
@@ -40,8 +43,8 @@
         <div class="collections main-card rounded px-2 py-4 pb-0 my-4">
             <div class="d-flex align-items-center">
                 <h1 class="display-5 text-primary mb-4">Items
-                    {% if (itemCollection.getUser == app.user or is_granted('ROLE_ADMIN')) %}
-                        <a href="{{ path('app_item_create',{'id':itemCollection.id}) }}" type="button" class="btn btn-outline-primary">
+                    {% if (collection.getUser == app.user or is_granted('ROLE_ADMIN')) %}
+                        <a href="{{ path('app_item_create',{'id':collection.id}) }}" type="button" class="btn btn-outline-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
                             </svg>
@@ -49,10 +52,10 @@
                     {% endif %}
                 </h1>
             </div>
-            {% if itemCollection.getItems|length >0 %}
+            {% if collection.getItems|length >0 %}
             <div class="items-cards">
                 <div class="row">
-                    {% for item in itemCollection.getItems %}
+                    {% for item in collection.getItems %}
                         <div class="pb-4 col-12">
                             <div class="card item h-100">
                                 <div class="row g-0 h-100 overflow-hidden">

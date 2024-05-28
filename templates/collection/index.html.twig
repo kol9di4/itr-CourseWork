@@ -23,6 +23,9 @@
                                                 <h5 class="card-title">{{ collection.name|capitalize }}</h5>
                                                 <h5 class="card-title text-primary">{{ collection.getUser.getUsername }}</h5>
                                             </div>
+                                            <h6 class="text-muted  flex-shrink-0">Category : <a
+                                                        href="{{ path('app_collection_category',{'category':collection.getCategory.name}) }}">{{ collection.getCategory.name }}</a>
+                                            </h6>
                                             <p class="card-text">{{ collection.description|slice(0, 120) }}...</p>
                                         </div>
                                         <div class="bottom">
@@ -66,7 +69,7 @@
         <h1 class="display-4 text-primary mb-4">Last added items</h1>
         <div class="items-cards">
             <div class="row">
-                {% for item in collections[0].getItems %}
+                {% for item in items %}
                     <div class="pb-4 col-12">
                         <div class="card item h-100">
                             <div class="row g-0 h-100 overflow-hidden">
@@ -79,7 +82,7 @@
                                                                 href="{{ path('app_collection_view',{'id': item.getItemCollection.getId}) }}">{{ item.getItemCollection.getName }}</a>
                                                     </h6>
                                                     <h6 class="text-muted  flex-shrink-0">Category : <a
-                                                                href="#">{{ item.getItemCollection.getCategory.getName }}</a>
+                                                                href="{{ path('app_collection_category',{'category':item.getItemCollection.getCategory.name}) }}">{{ item.getItemCollection.getCategory.getName }}</a>
                                                     </h6>
                                                 </div>
                                                 <p class="lead  flex-shrink-0">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>

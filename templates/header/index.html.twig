@@ -44,7 +44,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light py-4" style="background-color: rgb(246, 245, 255);">
     <div class="container" style="justify-content: flex-end;">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav_lc" aria-controls="nav_lc" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#nav_lc" aria-controls="nav_lc" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse ms-auto" id="nav_lc">
@@ -52,9 +52,17 @@
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <li><a href="{{ path('app') }}" class="nav-link px-2 link-dark ps-0">Home</a></li>
-                        <li><a href="#" class="nav-link px-2 link-dark">Inventory</a></li>
-                        <li><a href="#" class="nav-link px-2 link-dark">Customers</a></li>
-                        <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>
+                        <li>
+                            <div class="dropdown">
+                                <a href="#" class="btn btn--outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                                <ul class="dropdown-menu">
+                                    {% for category in categories.findAll %}
+                                        <li><a class="dropdown-item" href="{{ path('app_collection_category',{'category':category.name}) }}">{{ category.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                        </li>
                     </ul>
 
                     <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
