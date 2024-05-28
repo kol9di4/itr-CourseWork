@@ -114,11 +114,11 @@ class ItemController extends AbstractController
     #[Route('/collections/{idCollection}/items/{idItem}/update', name: 'app_item_update', methods: ['GET','POST'])]
     public function update(Request $request, int $idCollection, int $idItem): Response
     {
+
         $itemCollection = $this->itemCollectionRepository->findOneBy(['id'=>$idCollection]);
-        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
-        if ($item->getItemCollection() !== $itemCollection) {
-            $this->addFlash('error', 'Item not found');
-            return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
+        if(!$this->isHaveRightsForEdit($itemCollection->getUser())) {
+            $this->addFlash('danger', 'No permissions to edit.');
+            return $this->redirectToRoute('app_collection_view',['id' => $itemCollection->getId()]);
         }
 
         $form = $this->createForm(ItemType::class, $item);
@@ -139,6 +139,14 @@ class ItemController extends AbstractController
             'item' => $item,
         ]);
     }
+
+    private function isHaveRightsForEdit(User $autor){
+        $user = $this->getUser();
+        $isUserMatched = $user->getId() === $autor->getId();
+        $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
+        return ($isUserMatched || $isSetRole);
+    }
+
     private function isItemPartCollection(int $idCollection, int $idItem): bool{
         $itemCollection = $this->itemCollectionRepository->findOneBy(['id' => $idCollection]);
         $item = $this->itemRepository->findOneBy(['id' => $idItem]);

@@ -123,7 +123,7 @@ class CollectionController extends AbstractController
             'itemCollection' => $itemCollection,
         ]);
     }
-    public function isHaveRightsForEdit(User $autor){
+    private function isHaveRightsForEdit(User $autor){
         $user = $this->getUser();
         $isUserMatched = $user->getId() === $autor->getId();
         $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
