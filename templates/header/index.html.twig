@@ -7,17 +7,15 @@
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                        <li><a href="{{ path('app') }}" class="nav-link px-2 link-dark ps-0">Home</a></li>
-                        <li>
-                            <div class="dropdown">
-                                <a href="#" class="btn btn--outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                                <ul class="dropdown-menu">
-                                    {% for category in categories.findAll %}
-                                        <li><a class="dropdown-item" href="{{ path('app_collection_category',{'category':category.name}) }}">{{ category.name }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-
+                        <li><a href="{{ path('app') }}" class="nav-link px-3 link-dark ps-0">Home</a></li>
+                        <li><a href="{{ path('app_collections') }}" class="nav-link px-3 link-dark ps-0">All Collections</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="nav-link px-3 link-dark ps-0 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                            <ul class="dropdown-menu border-0">
+                                {% for category in categories.findAll %}
+                                    <li><a class="dropdown-item" href="{{ path('app_collection_category',{'category':category.name}) }}">{{ category.name }}</a></li>
+                                {% endfor %}
+                            </ul>
                         </li>
                     </ul>
 
