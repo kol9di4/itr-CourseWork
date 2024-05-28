@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\User;
 use App\Repository\CategoryRepository;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
@@ -28,7 +29,8 @@ class CollectionController extends AbstractController
     public function index(ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository): Response
     {
         $collections = $itemCollectionRepository->findTop(6);
-        $items = $itemRepository->findAllSortedByDate();
+//        $items = $itemRepository->findAllSortedByDate();
+        $items = $itemRepository->findAll();
         return $this->render('collection/index.html.twig', [
             'collections' => $collections,
             'items' => $items,
@@ -88,11 +90,8 @@ class CollectionController extends AbstractController
     #[Route('/collections/{id}/update', name: 'app_collection_update', methods: ['GET', 'POST'])]
     public function update(Request $request, FileUploader $fileUploader, ItemCollection $itemCollection): Response
     {
-        $user = $this->getUser();
-        $isUserMatched = $user->getId() === $itemCollection->getUser()->getId();
-        $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
-        if(!($isUserMatched || $isSetRole)) {
-            $this->addFlash('error', 'No permissions to edit.');
+        if(!$this->isHaveRightsForEdit($itemCollection->getUser())) {
+            $this->addFlash('danger', 'No permissions to edit.');
             return $this->redirectToRoute('app_collection_view',['id' => $itemCollection->getId()]);
         }
 
@@ -104,13 +103,6 @@ class CollectionController extends AbstractController
         $form = $this->createForm(CollectionType::class, $itemCollection);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            foreach ($originalCustomAttributes as $customItemAttribute) {
-//                if (false === $itemCollection->getCustomItemAttributes()->contains($customItemAttribute)) {
-//                    dd($customItemAttribute);
-//                    $customItemAttribute->getItemCollection()->removeElement($itemCollection);
-//                    $this->entityManager->persist($customItemAttribute);
-//                }
-//            }
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
@@ -130,6 +122,12 @@ class CollectionController extends AbstractController
             'form'  => $form,
             'itemCollection' => $itemCollection,
         ]);
+    }
+    public function isHaveRightsForEdit(User $autor){
+        $user = $this->getUser();
+        $isUserMatched = $user->getId() === $autor->getId();
+        $isSetRole = in_array('ROLE_ADMIN', $user->getRoles());
+        return ($isUserMatched || $isSetRole);
     }
 }
 
