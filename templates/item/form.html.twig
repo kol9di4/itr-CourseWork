@@ -18,11 +18,18 @@
 {% block body %}
 
         <div>
+                <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+                <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
                 {{ form_start(form) }}
                         {{ form_errors(form) }}
                         {{ form_row(form.name) }}
+                        <label for="tags" class="d-block mb-2">Tags:</label>
+                        <input type="text" name="tags" class="container rounded-1 mb-3" placeholder="Type tag here" value="{{ tagsForItem }}" data-whitelist="{{ whitelistTags }}" id="item_tag">
                         {{ form_rest(form) }}
+
                         <button type="submit" class="btn btn-outline-primary" formnovalidate>{{ action|capitalize }}</button>
                 {{ form_end(form) }}
         </div>
+        <script src="{{ asset('js/tags-helper.js') }}"></script>
 {% endblock %}
