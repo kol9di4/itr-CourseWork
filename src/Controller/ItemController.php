@@ -168,13 +168,7 @@ class ItemController extends AbstractController
             $tagsRequest = json_decode($request->request->get('tags'));
             if(!empty($tagsRequest))
             {
-
-//                foreach ($item->getTags() as $tag) {
-//                    $item->removeTag($tag);
-//                }
                 $item->removeAllTags();
-//                dd($item->getTags()[0]);
-//                $item->removeTag($item->getTags()[0]);
                 $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
                 foreach ($tagsForItem as $tag) {
                     $item->addTag($tag);
