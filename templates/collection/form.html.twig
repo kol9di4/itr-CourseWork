@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ action|capitalize }} Collection{% endblock %}
+
 {% block javascripts %}
     <script type="application/javascript" src="{{ asset('js/collection-form-helper.js') }}"></script>
 {% endblock %}
+
 {% block links %}
     {% if itemCollection is defined %}
         <a href="{{ path('app') }}">Home</a> /
@@ -25,7 +27,7 @@
         {{ form_label(form.image) }}
         {% if action != 'create' %}
             <img src="{{ asset('uploads/images/' ~ itemCollection.image.path) }}" class="d-block" style="width: 200px">
-            <p class="mt-2">or choose a new one</p>
+            <p class="mt-2">or upload a new one</p>
         {% endif %}
         {{ form_widget(form.image) }}
         {{ form_errors(form.image) }}
