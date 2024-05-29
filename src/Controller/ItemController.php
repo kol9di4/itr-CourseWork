@@ -93,8 +93,6 @@ class ItemController extends AbstractController
     #[Route('/collections/{idCollection}/items/{idItem}', name: 'app_item', methods: ['GET', 'POST'])]
     public function view(Request $request, int $idCollection, int $idItem, CommentRepository $commentRepository): Response
     {
-//        $itemNew = $this->itemRepository->getOneItemWithAttributes($idItem);
-//        dump($itemNew->)
         if ($this->isItemPartCollection($idCollection, $idItem)) {
             $this->addFlash('error', 'Item not found');
             return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
@@ -170,13 +168,17 @@ class ItemController extends AbstractController
             $tagsRequest = json_decode($request->request->get('tags'));
             if(!empty($tagsRequest))
             {
-                foreach ($item->getTags() as $tag) {
-                    $item->removeTag($tag);
-                }
-                $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
-                foreach ($tagsForItem as $tag) {
-                    $item->addTag($tag);
-                }
+
+//                foreach ($item->getTags() as $tag) {
+//                    $item->removeTag($tag);
+//                }
+//                $item->removeAllTags();
+//                dd($item->getTags()[0]);
+                $item->removeTag($item->getTags()[0]);
+//                $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
+//                foreach ($tagsForItem as $tag) {
+//                    $item->addTag($tag);
+//                }
                 $this->entityManager->persist($item);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Update successful');

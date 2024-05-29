@@ -28,7 +28,7 @@ class Item
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items', orphanRemoval: true, cascade: ['persist', 'remove'])]
     #[Assert\NotBlank]
     private Collection $tags;
 
@@ -130,6 +130,11 @@ class Item
     public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    public function removeAllTags(): static{
+        $this->tags->clear();
+        return $this;
     }
 
     public function addTag(Tag $tag): static
