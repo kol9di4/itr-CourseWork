@@ -12,6 +12,7 @@ use App\Entity\ItemAttributeStringField;
 use App\Entity\ItemAttributeTextField;
 use App\Entity\ItemCollection;
 use App\Entity\Like;
+use App\Entity\Tag;
 use App\Entity\User;
 use App\Enum\CustomAttributeEnum;
 use App\Enum\LikeTypesEnum;
@@ -20,8 +21,11 @@ use App\Form\ItemType;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
 use App\Repository\LikeRepository;
+use App\Repository\TagRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -38,12 +42,31 @@ class ItemController extends AbstractController
     ){}
 
     #[Route('/collections/{id}/items/create', name: 'app_item_create', methods: ['GET','POST'])]
-    public function index(Request $request,ItemCollection $itemCollection,ValidatorInterface $validator): Response
+    public function index(Request $request,ItemCollection $itemCollection,ValidatorInterface $validator, TagRepository $tagRepository): Response
     {
         $item = $this->setAttributesToAnItem($itemCollection);
+
+        $tagsForItem = '';
+        foreach ($item->getTag() as $tag)
+        {
+            $tagsForItem .= $tag->getName() . ', ';
+        }
+
+        $allTags = $tagRepository->findAll();
+        $whitelistTags = '';
+        foreach ($allTags as $tag) {
+            $whitelistTags .= $tag->getName() . ', ';
+        }
+        $item = new Item();
         $form = $this->createForm(ItemType::class, $item);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $tagsRequest = json_decode($request->request->get('tags'));
+            $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
+            foreach ($tagsForItem as $tag) {
+                $item->addTag($tag);
+            }
             $item->setItemCollection($itemCollection);
             $this->entityManager->persist($item);
             $this->entityManager->flush();
@@ -55,6 +78,8 @@ class ItemController extends AbstractController
             'form' => $form,
             'itemCollection' => $itemCollection,
             'errors' => '',
+            'tagsForItem' => $tagsForItem,
+            'whitelistTags' => $whitelistTags,
         ]);
     }
 
@@ -97,9 +122,6 @@ class ItemController extends AbstractController
     public function like(Request $request, int $idCollection, int $idItem): void
     {
         $user = $this->getUser();
-        if(!isset($user)){
-//            logic for unauth user
-        }
         $likeType = (int)$request->request->get('likeType')===1
             ? LikeTypesEnum::Like
             : LikeTypesEnum::Dislike;
@@ -115,7 +137,7 @@ class ItemController extends AbstractController
     }
 
     #[Route('/collections/{idCollection}/items/{idItem}/update', name: 'app_item_update', methods: ['GET','POST'])]
-    public function update(Request $request, int $idCollection, int $idItem): Response
+    public function update(Request $request, int $idCollection, int $idItem, TagRepository $tagRepository): Response
     {
 
         $item = $this->itemRepository->findOneBy(['id'=>$idItem]);
@@ -125,9 +147,26 @@ class ItemController extends AbstractController
             return $this->redirectToRoute('app_collection_view',['id' => $itemCollection->getId()]);
         }
 
+        $tagsForItem = '';
+        foreach ($item->getTag() as $tag)
+        {
+            $tagsForItem .= $tag->getName() . ', ';
+        }
+
+        $allTags = $tagRepository->findAll();
+        $whitelistTags = '';
+        foreach ($allTags as $tag) {
+            $whitelistTags .= $tag->getName() . ', ';
+        }
         $form = $this->createForm(ItemType::class, $item);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $tagsRequest = json_decode($request->request->get('tags'));
+            $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
+            foreach ($tagsForItem as $tag) {
+                $item->addTag($tag);
+            }
             $this->entityManager->persist($item);
             $this->entityManager->flush();
             $this->addFlash('success', 'Update successful');
@@ -141,6 +180,8 @@ class ItemController extends AbstractController
             'action' => 'update',
             'form' => $form,
             'item' => $item,
+            'tagsForItem' => $tagsForItem,
+            'whitelistTags' => $whitelistTags,
         ]);
     }
 
@@ -157,6 +198,21 @@ class ItemController extends AbstractController
         }
         $this->addFlash('danger', 'No permissions to delete.');
         exit();
+    }
+
+    private function checkTags(array $tagsRequest, TagRepository $tagRepository): array{
+        $tags = [];
+        foreach ($tagsRequest as $tagName)
+        {
+            $tag = $tagRepository->findOneBy(['name'=>$tagName->value]);
+            if(!isset($tag)){
+                $tag = new Tag();
+                $tag->setName($tagName->value);
+            }
+            $tags[] = $tag;
+            $this->entityManager->persist($tag);
+        }
+        return $tags;
     }
 
     private function isHaveRightsForEdit(User $autor){
