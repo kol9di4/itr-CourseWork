@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ collection.name }}{% endblock %}
+{% block title %}{{ collection.name|capitalize }} collection{% endblock %}
 
 {% block links %}
     <a href="{{ path('app') }}">Home</a> /
