@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\CategoryRepository;
 use App\Repository\ItemCollectionRepository;
+use App\Repository\ItemRepository;
 use App\Service\FileUploader;
 use App\Entity\ItemCollection;
 use App\Entity\Image;
@@ -71,11 +72,13 @@ class CollectionController extends AbstractController
     }
 
     #[Route('/collections/{id}', name: 'app_collection_view', requirements: ['id' => '\d+'])]
-    public function view(ItemCollection $itemCollection): Response
+    public function view(ItemCollection $itemCollection, ItemRepository $itemRepository): Response
     {
+        $items = $itemRepository->findByCollectionOrderByDate($itemCollection);
         return $this->render('collection/vew.html.twig', [
             'controller_name' => 'View',
             'collection' => $itemCollection,
+            'items' => $items,
         ]);
     }
 

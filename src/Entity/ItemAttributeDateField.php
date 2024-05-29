@@ -24,7 +24,7 @@ class ItemAttributeDateField
     #[ORM\JoinColumn(nullable: false)]
     private ?Item $item = null;
 
-    #[ORM\ManyToOne(inversedBy: 'itemAttributeDateFields')]
+    #[ORM\ManyToOne(inversedBy: 'itemAttributeDateFields', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomItemAttribute $customItemAttribute = null;
 

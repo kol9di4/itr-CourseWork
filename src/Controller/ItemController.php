@@ -17,6 +17,7 @@ use App\Enum\CustomAttributeEnum;
 use App\Enum\LikeTypesEnum;
 use App\Form\CommentType;
 use App\Form\ItemType;
+use App\Repository\CommentRepository;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
 use App\Repository\LikeRepository;
@@ -65,14 +66,17 @@ class ItemController extends AbstractController
     }
 
     #[Route('/collections/{idCollection}/items/{idItem}', name: 'app_item', methods: ['GET', 'POST'])]
-    public function view(Request $request, int $idCollection, int $idItem): Response
+    public function view(Request $request, int $idCollection, int $idItem, CommentRepository $commentRepository): Response
     {
+//        $itemNew = $this->itemRepository->getOneItemWithAttributes($idItem);
+//        dump($itemNew->)
         if ($this->isItemPartCollection($idCollection, $idItem)) {
             $this->addFlash('error', 'Item not found');
             return $this->redirectToRoute('app_collection_view', ['id'=>$idCollection]);
         }
-        $item = $this->itemRepository->findOneBy(['id' => $idItem]);
-        $item->setViews($item->getViews() + 1);
+        $item = $this->itemRepository->getOneItemWithAttributes($idItem);
+        $comments = $commentRepository->findByItemOrderByDate($item);
+
         $comment = new Comment();
         $comment->setItem($item);
         $comment->setUser($this->getUser());
@@ -84,11 +88,12 @@ class ItemController extends AbstractController
             $this->entityManager->flush();
             return $this->redirectToRoute('app_item',['idItem'=>$idItem,'idCollection'=>$idCollection]);
         }
-
+        $item->setViews($item->getViews() + 1);
         $this->entityManager->flush();
         return $this->render('item/view.html.twig', array_merge([
             'item' => $item,
             'commentForm' => $commentForm,
+            'comments' => $comments,
         ],$likesInfo)
         );
     }

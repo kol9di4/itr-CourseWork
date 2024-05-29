@@ -28,11 +28,11 @@ class Item
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items', orphanRemoval: true)]
     #[Assert\NotBlank]
     private Collection $tag;
 
-    #[ORM\ManyToOne(inversedBy: 'item')]
+    #[ORM\ManyToOne(inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ItemCollection $itemCollection = null;
 
@@ -45,7 +45,7 @@ class Item
     /**
      * @var Collection<int, Comment>
      */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'item', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'item', orphanRemoval: true, fetch: 'EAGER')]
     private Collection $comments;
 
     /**

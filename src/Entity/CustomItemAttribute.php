@@ -33,19 +33,19 @@ class CustomItemAttribute
     private ?ItemCollection $itemCollection = null;
 
     #[ORM\OneToMany(targetEntity: ItemAttributeBooleanField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private Collection $itemAttributeBooleanField;
+    private Collection $itemAttributeBooleanFields;
 
     #[ORM\OneToMany(targetEntity: ItemAttributeDateField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $itemAttributeDateFields;
 
     #[ORM\OneToMany(targetEntity: ItemAttributeIntegerField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private Collection $itemAttributeIntegerField;
+    private Collection $itemAttributeIntegerFields;
 
     #[ORM\OneToMany(targetEntity: ItemAttributeStringField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private Collection $itemAttributeStringField;
+    private Collection $itemAttributeStringFields;
 
     #[ORM\OneToMany(targetEntity: ItemAttributeTextField::class, mappedBy: 'customItemAttribute', orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private Collection $itemAttributeTextField;
+    private Collection $itemAttributeTextFields;
 
     public function __construct()
     {

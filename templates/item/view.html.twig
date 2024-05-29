@@ -18,12 +18,12 @@
                 <div class="text mb-2">
                     <div class="text-header d-flex justify-content-between align-items-center">
                         <div class="d-flex flex-column flex-md-row">
-                            <h6 class="me-4 text-muted">Collection : <a href="/collections/1">{{ item.getItemCollection.name }}</a>
+                            <h6 class="me-4 text-muted">Collection : <a href="/collections/1">{{ item.itemCollection.name }}</a>
                             </h6>
-                            <h6 class="text-muted">Category : <a href="{{ path('app_collection_category',{'category':item.getItemCollection.getCategory.name}) }}">{{ item.getItemCollection.getCategory.name}}</a>
+                            <h6 class="text-muted">Category : <a href="{{ path('app_collection_category',{'category':item.itemCollection.getCategory.name}) }}">{{ item.itemCollection.getCategory.name}}</a>
                             </h6>
                         </div>
-                        <p class="lead">Author : <span class="text-primary">{{ item.getItemCollection.getUser.username }}</span></p>
+                        <p class="lead">Author : <span class="text-primary">{{ item.itemCollection.user.username }}</span></p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">

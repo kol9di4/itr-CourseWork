@@ -1,9 +1,9 @@
 
 <h5 class="mt-4 text-primary comment-count display-6">
     <span>
-        {{ item.getComments|length }}
+        {{ comments|length }}
     </span>
-    {% if  item.getComments|length == 1  %}
+    {% if  comments|length == 1  %}
         comment
     {% else %}
         comments
@@ -12,7 +12,7 @@
 <div>
     <div class="my-4" style="background-color:#0d6efd;height: 2px;"></div>
     <div class="comments-vew">
-        {% for comment in item.getComments %}
+        {% for comment in comments %}
             <div class="comment my-2 p-2 rounded">
                 <div class="container-fluid px-0">
                     <div class="col-12 d-flex justify-content-between">

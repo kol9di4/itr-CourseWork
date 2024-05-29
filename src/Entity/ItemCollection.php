@@ -31,17 +31,17 @@ class ItemCollection
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateAdd = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Image $image = null;
 
     /**
      * @var Collection<int, Item>
      */
-    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'itemCollection')]
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'itemCollection', fetch: 'EAGER')]
     private Collection $items;
 
-    #[ORM\ManyToOne(inversedBy: 'itemCollections')]
+    #[ORM\ManyToOne(inversedBy: 'itemCollections', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
@@ -53,7 +53,7 @@ class ItemCollection
     #[CollectionCustomAttribute()]
     private Collection $customItemAttributes;
 
-    #[ORM\ManyToOne(inversedBy: 'itemCollections')]
+    #[ORM\ManyToOne(inversedBy: 'itemCollections', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 

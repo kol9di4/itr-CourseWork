@@ -20,7 +20,7 @@ class ItemAttributeBooleanField
     #[ORM\JoinColumn(nullable: false)]
     private ?Item $item = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ItemAttributeBooleanField')]
+    #[ORM\ManyToOne(inversedBy: 'itemAttributeBooleanFields', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomItemAttribute $customItemAttribute = null;
 

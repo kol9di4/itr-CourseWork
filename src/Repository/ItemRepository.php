@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Item;
+use App\Entity\ItemCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,14 +20,43 @@ class ItemRepository extends ServiceEntityRepository
     //    /**
     //     * @return Item[] Returns an array of Item objects
     //     */
-        public function findAllSortedByDate(): array
-        {
-            return $this->createQueryBuilder('i')
-                ->orderBy('i.dateAdd', 'DESC')
-                ->getQuery()
-                ->getResult()
+    public function findAllSortedByDate(): array
+    {
+        return $this->createQueryBuilder('i')
+            ->orderBy('i.dateAdd', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByCollectionOrderByDate($collection): array
+    {
+        return $this->createQueryBuilder('i')
+            ->where('i.itemCollection = :collection')
+            ->setParameter('collection', $collection)
+            ->orderBy('i.dateAdd', 'ASC')
+            ->getQuery()
+            ->getResult()
             ;
-        }
+    }
+
+    public function getOneItemWithAttributes(int $id): ?Item{
+        return $this->createQueryBuilder('item')
+            ->select('item','b','s','i','t','d','c','l','ta')
+            ->leftJoin('item.itemAttributeBooleanFields','b')
+            ->leftJoin('item.itemAttributeStringFields','s')
+            ->leftJoin('item.itemAttributeIntegerFields','i')
+            ->leftJoin('item.itemAttributeTextFields','t')
+            ->leftJoin('item.itemAttributeDateFields','d')
+            ->leftJoin('item.tag','ta')
+            ->leftJoin('item.likes','l')
+            ->leftJoin('item.comments','c')
+            ->orderBy('item.dateAdd', 'DESC')
+            ->where('item.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //        public function findLargestCollections(){
 //            return $this->createQueryBuilder('i')
 //                ->select('i.itemCollection')

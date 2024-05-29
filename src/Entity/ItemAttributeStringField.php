@@ -23,7 +23,7 @@ class ItemAttributeStringField
     #[ORM\JoinColumn(nullable: false)]
     private ?Item $item = null;
 
-    #[ORM\ManyToOne(inversedBy: 'itemAttributeStringFields')]
+    #[ORM\ManyToOne(inversedBy: 'itemAttributeStringFields', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?CustomItemAttribute $customItemAttribute = null;
 
