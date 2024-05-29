@@ -47,7 +47,7 @@ class ItemController extends AbstractController
         $item = $this->setAttributesToAnItem($itemCollection);
 
         $tagsForItem = '';
-        foreach ($item->getTag() as $tag)
+        foreach ($item->getTags() as $tag)
         {
             $tagsForItem .= $tag->getName() . ', ';
         }
@@ -148,7 +148,7 @@ class ItemController extends AbstractController
         }
 
         $tagsForItem = '';
-        foreach ($item->getTag() as $tag)
+        foreach ($item->getTags() as $tag)
         {
             $tagsForItem .= $tag->getName() . ', ';
         }
@@ -163,17 +163,25 @@ class ItemController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $tagsRequest = json_decode($request->request->get('tags'));
-            $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
-            foreach ($tagsForItem as $tag) {
-                $item->addTag($tag);
+            if(!empty($tagsRequest))
+            {
+                foreach ($item->getTags() as $tag) {
+                    $item->removeTag($tag);
+                }
+                $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
+                foreach ($tagsForItem as $tag) {
+                    $item->addTag($tag);
+                }
+                $this->entityManager->persist($item);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Update successful');
+                return $this->redirectToRoute('app_item', [
+                    'idCollection'=>$itemCollection->getId(),
+                    'idItem'=>$item->getId(),
+                ]);
             }
-            $this->entityManager->persist($item);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Update successful');
-            return $this->redirectToRoute('app_item', [
-                'idCollection'=>$itemCollection->getId(),
-                'idItem'=>$item->getId(),
-            ]);
+
+            $form->addError(new FormError('Invalid tags.'));
         }
 
         return $this->render('item/form.html.twig', [
