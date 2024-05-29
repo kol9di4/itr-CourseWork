@@ -32,7 +32,9 @@
                                         <div class="text mb-4">
                                             <div class="text-header d-flex justify-content-between">
                                                 <h5 class="card-title">{{ collection.name|capitalize }}</h5>
-                                                <h5 class="card-title text-primary">{{ collection.getUser.getUsername }}</h5>
+                                                <a href="{{ path('app_profile',{'userName':collection.getUser.username}) }}">
+                                                    {{ collection.getUser.username }}
+                                                </a>
                                             </div>
                                             <p class="card-text">{{ collection.description|slice(0, 120) }}...</p>
                                         </div>
