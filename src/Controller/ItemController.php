@@ -172,13 +172,13 @@ class ItemController extends AbstractController
 //                foreach ($item->getTags() as $tag) {
 //                    $item->removeTag($tag);
 //                }
-//                $item->removeAllTags();
+                $item->removeAllTags();
 //                dd($item->getTags()[0]);
-                $item->removeTag($item->getTags()[0]);
-//                $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
-//                foreach ($tagsForItem as $tag) {
-//                    $item->addTag($tag);
-//                }
+//                $item->removeTag($item->getTags()[0]);
+                $tagsForItem = $this->checkTags($tagsRequest, $tagRepository);
+                foreach ($tagsForItem as $tag) {
+                    $item->addTag($tag);
+                }
                 $this->entityManager->persist($item);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Update successful');
