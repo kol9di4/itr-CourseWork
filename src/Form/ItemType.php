@@ -2,13 +2,15 @@
 
 namespace App\Form;
 
+use App\Entity\Item;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType as SymfonyCollectionType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ItemType extends AbstractType
 {
@@ -18,11 +20,27 @@ class ItemType extends AbstractType
             ->add('name', TextType::class, [
                 'empty_data' => '',
             ])
-            ->add('tag', EntityType::class, [
-                'class' => Tag::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-            ])
+//            ->add('tag', EntityType::class, [
+//                'class' => Tag::class,
+//                'choice_label' => 'name',
+//                'multiple' => true,
+//            ])
+//            ->add('tag', TextType::class, [
+//                'mapped'=> false,
+//                'required' => false,
+//                'empty_data' => '',
+//                'attr' =>    [
+//                    'value' => $options['tags'],
+//                    'name' => 'basic',
+//                    'class' => 'container rounded-1 mb-3',
+//                    'placeholder' => 'Type tag here',
+//                    'data-whitelist' => $options['whitelist-tags'],
+//                    'id' => 'tags',
+//                ],
+//                'constraints' => [
+//                    new NotBlank(),
+//                ]
+//            ])
             ->add('itemAttributeIntegerFields',SymfonyCollectionType::class, [
                     'entry_type' => ItemAttributeIntegerType::class,
                     'entry_options' => ['label' => false],
@@ -59,7 +77,10 @@ class ItemType extends AbstractType
 //    public function configureOptions(OptionsResolver $resolver): void
 //    {
 //        $resolver->setDefaults([
-////            'data_class' => Item::class,
+//            'tags' => '',
+//            'whitelist-tags' => '',
 //        ]);
+//        $resolver->setAllowedTypes('tags', 'string');
+//        $resolver->setAllowedTypes('whitelist-tags', 'string');
 //    }
 }
