@@ -118,6 +118,7 @@ class ItemController extends AbstractController
     public function update(Request $request, int $idCollection, int $idItem): Response
     {
 
+        $item = $this->itemRepository->findOneBy(['id'=>$idItem]);
         $itemCollection = $this->itemCollectionRepository->findOneBy(['id'=>$idCollection]);
         if(!$this->isHaveRightsForEdit($itemCollection->getUser())) {
             $this->addFlash('danger', 'No permissions to edit.');
@@ -141,6 +142,21 @@ class ItemController extends AbstractController
             'form' => $form,
             'item' => $item,
         ]);
+    }
+
+    #[Route('/collections/{idCollection}/items/{idItem}/delete', name: 'app_item_delete', methods: ['POST'])]
+    public function delete(Request $request, int $idCollection, int $idItem): Response
+    {
+        $itemCollection = $this->itemCollectionRepository->findOneBy(['id'=>$idCollection]);
+        $item = $this->itemRepository->findOneBy(['id'=>$idItem]);
+        if($this->isHaveRightsForEdit($itemCollection->getUser())) {
+            $this->entityManager->remove($item);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Item deleted.');
+            exit();
+        }
+        $this->addFlash('danger', 'No permissions to delete.');
+        exit();
     }
 
     private function isHaveRightsForEdit(User $autor){

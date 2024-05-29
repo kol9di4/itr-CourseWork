@@ -1,21 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Collections of the category "{{ category }}"{% endblock %}
+{% block title %}All collections{% endblock %}
 
 {% block links %}
     <a href="{{ path('app') }}">Home</a> /
-    <a href="{{ path('app_collection_category',{'category':category}) }}">{{ category|capitalize }}</a>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
+    <a href="{{ path('app_collections') }}">All Collections</a>
 {% endblock %}
 
 {% block body %}
     <script type="application/javascript" src="{{ asset('js/delete-helper.js') }}"></script>
 
     <div class="collections main-card rounded p-4 pb-0 my-4">
-        <h1 class="display-4 text-primary mb-4">Collections of the category "{{ category }}"</h1>
+        <h1 class="display-4 text-primary mb-4">All collections: {{ collections.getTotalItemCount }}</h1>
         <div class="collections-cards">
             <div class="row">
                 {% for collection in collections %}
@@ -36,6 +32,9 @@
                                                     {{ collection.getUser.username }}
                                                 </a>
                                             </div>
+                                            <h6 class="text-muted  flex-shrink-0">Category : <a
+                                                        href="{{ path('app_collection_category',{'category':collection.getCategory.name}) }}">{{ collection.getCategory.name }}</a>
+                                            </h6>
                                             <p class="card-text">{{ collection.description|slice(0, 120) }}...</p>
                                         </div>
                                         <div class="bottom">
@@ -71,14 +70,15 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
+                {{ knp_pagination_render(collections) }}
             </div>
         </div>
     </div>
+
 {% endblock %}

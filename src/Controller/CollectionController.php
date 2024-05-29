@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\User;
-use App\Enum\PageSettings;
 use App\Repository\CategoryRepository;
 use App\Repository\ItemCollectionRepository;
-use App\Repository\ItemRepository;
 use App\Service\FileUploader;
 use App\Entity\ItemCollection;
 use App\Entity\Image;
@@ -16,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -27,25 +23,20 @@ class CollectionController extends AbstractController
         private EntityManagerInterface $entityManager,
     ){}
 
-    #[Route('/collections', name: 'app_collection')]
-    public function index(Request $request, ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository, PaginatorInterface $paginator): Response
+    #[Route('/collections', name: 'app_collections')]
+    public function index(Request $request, ItemCollectionRepository $itemCollectionRepository, PaginatorInterface $paginator): Response
     {
-        $items = $itemRepository->findAllSortedByDate();
         $collections = $itemCollectionRepository->findAll();
-
-        $items = $paginator->paginate(
-            $items, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            5 /*limit per page*/
-        );
-
         usort($collections, function($c1, $c2){
             return count($c1->getItems()) < count($c2->getItems());
         });
-        $collections = array_slice($collections,0, PageSettings::CountCollectionsForMainPage->value);
-        return $this->render('collection/index.html.twig', [
+        $collections = $paginator->paginate(
+            $collections, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
+        return $this->render('collection/all-collecions.html.twig', [
             'collections' => $collections,
-            'items' => $items,
         ]);
     }
 
@@ -99,6 +90,18 @@ class CollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/collections/{id}/delete', name: 'app_collection_delete', requirements: ['id' => '\d+'],methods: ['POST'])]
+    public function delete(ItemCollection $itemCollection): Response
+    {
+        if($this->isHaveRightsForEdit($itemCollection->getUser())) {
+            $this->entityManager->remove($itemCollection);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Collection deleted.');
+            exit();
+        }
+        $this->addFlash('danger', 'No permissions to delete.');
+        exit();
+    }
     #[Route('/collections/{id}/update', name: 'app_collection_update', methods: ['GET', 'POST'])]
     public function update(Request $request, FileUploader $fileUploader, ItemCollection $itemCollection): Response
     {
