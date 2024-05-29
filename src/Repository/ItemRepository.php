@@ -48,7 +48,7 @@ class ItemRepository extends ServiceEntityRepository
             ->leftJoin('item.itemAttributeIntegerFields','i')
             ->leftJoin('item.itemAttributeTextFields','t')
             ->leftJoin('item.itemAttributeDateFields','d')
-            ->leftJoin('item.tag','ta')
+            ->leftJoin('item.tags','ta')
             ->leftJoin('item.likes','l')
             ->leftJoin('item.comments','c')
             ->orderBy('item.dateAdd', 'DESC')
