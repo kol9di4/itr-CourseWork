@@ -51,7 +51,8 @@ $(function(){
         e.preventDefault();
         addCollectionAttribute();
     })
-    $('#custom-attributes-wrapper div.item').forEach((row)=>{
-        addRemoveAttributeButton(row);
-    });
+    document.querySelectorAll('#custom-attributes-wrapper div.item')
+        .forEach((row)=>{
+            addRemoveAttributeButton(row);
+        });
 })
