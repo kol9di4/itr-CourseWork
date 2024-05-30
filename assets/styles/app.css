@@ -7,6 +7,9 @@ body{
 p{
     text-align: justify;
 }
+.navbar{
+    background-color: rgb(var(--bs-secondary-bg-rgb));
+}
 .main{
     flex-grow: 1;
 }
@@ -14,7 +17,7 @@ p{
     flex-shrink: 0;
 }
 .main-card, .attribute-card{
-    background-color: rgb(251, 250, 255);
+    background-color: rgb(var(--bs-tertiary-bg-rgb));
 }
 .main-card .collections-cards .card.collection{
     min-height: 220px;
@@ -26,5 +29,5 @@ p{
     text-indent: 1.5em;
 }
 .comments-vew .comment{
-    background-color:#f7f7f7;
+    background-color: rgb(var(--bs-secondary-bg-rgb));
 }

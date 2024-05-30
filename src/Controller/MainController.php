@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Enum\PageSettings;
+use App\Enum\PageSettingsEnum;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -29,10 +29,17 @@ class MainController extends AbstractController
         usort($collections, function($c1, $c2){
             return count($c1->getItems()) < count($c2->getItems());
         });
-        $collections = array_slice($collections,0, PageSettings::CountCollectionsForMainPage->value);
+        $collections = array_slice($collections,0, PageSettingsEnum::CountCollectionsForMainPage->value);
         return $this->render('collection/index.html.twig', [
             'collections' => $collections,
             'items' => $items,
         ]);
+    }
+    #[Route('/theme', name: 'app_theme',methods: ['GET','POST'])]
+    public function theme(Request $request ): void
+    {
+        $this->
+        dd($this->get('twig'));
+//        $this->theme = $request->request->get('theme');
     }
 }

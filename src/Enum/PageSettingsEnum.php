@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum PageSettings: int
+enum PageSettingsEnum: int
 {
     case CountCollectionsForMainPage = 6;
 }
