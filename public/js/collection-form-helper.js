@@ -34,14 +34,24 @@ function addRemoveAttributeButton(item) {
     });
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-    document.querySelector('#add-custom-attribute')
-        .addEventListener('click', (e) =>{
+// document.addEventListener('DOMContentLoaded',()=>{
+//     document.querySelector('#add-custom-attribute')
+//         .addEventListener('click', (e) =>{
+//         e.preventDefault();
+//         addCollectionAttribute();
+//     })
+//     document.querySelectorAll('#custom-attributes-wrapper div.item')
+//         .forEach((row)=>{
+//             addRemoveAttributeButton(row);
+//         });
+// })
+
+$(function(){
+    $('body').on('click','#add-custom-attribute',function (e){
         e.preventDefault();
         addCollectionAttribute();
     })
-    document.querySelectorAll('#custom-attributes-wrapper div.item')
-        .forEach((row)=>{
-            addRemoveAttributeButton(row);
-        });
+    $('#custom-attributes-wrapper div.item').forEach((row)=>{
+        addRemoveAttributeButton(row);
+    });
 })

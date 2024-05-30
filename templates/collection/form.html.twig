@@ -3,7 +3,7 @@
 {% block title %}{{ action|capitalize }} Collection{% endblock %}
 
 {% block javascripts %}
-    <script type="application/javascript" src="{{ asset('js/collection-form-helper.js') }}"></script>
+    {{ parent() }}
 {% endblock %}
 
 {% block links %}
@@ -50,4 +50,5 @@
         {{ form_rest(form) }}
         <button type="submit" class="d-block mt-4 btn btn-outline-primary" formnovalidate>{{ action|capitalize }}</button>
     {{ form_end(form) }}
+    <script type="application/javascript" src="{{ asset('js/collection-form-helper.js') }}"></script>
 {% endblock %}
