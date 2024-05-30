@@ -38,7 +38,7 @@ class ItemCollection
     /**
      * @var Collection<int, Item>
      */
-    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'itemCollection', fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'itemCollection', fetch: 'EAGER', cascade: ['persist', 'remove'])]
     private Collection $items;
 
     #[ORM\ManyToOne(inversedBy: 'itemCollections', fetch: 'EAGER')]
