@@ -36,7 +36,11 @@
                     </div>
                 </div>
 
-                <div class="lead flex-shrink-0">Author : <span class="text-primary">{{ collection.getUser.username }}</span></div>
+                <p class="lead  flex-shrink-0">Author :
+                    <a href="{{ path('app_profile',{'userName':collection.user.username}) }}">
+                        {{ collection.user.username }}
+                    </a>
+                </p>
             </div>
             <div class="text-muted  flex-shrink-0">Category : <a
                         href="{{ path('app_collection_category',{'category':collection.getCategory.name}) }}">{{ collection.getCategory.name }}</a>
@@ -84,7 +88,11 @@
                                                                     href="#">{{ item.itemCollection.category.name }}</a>
                                                         </h6>
                                                     </div>
-                                                    <p class="lead  flex-shrink-0">Author : <span class="text-primary">{{ item.itemCollection.user.username }}</span></p>
+                                                    <p class="lead  flex-shrink-0">Author :
+                                                        <a href="{{ path('app_profile',{'userName':item.getItemCollection.getUser.username}) }}">
+                                                            {{ item.getItemCollection.getUser.username }}
+                                                        </a>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="bottom">
