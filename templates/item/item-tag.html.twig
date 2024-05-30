@@ -4,7 +4,7 @@
 
 {% block links %}
     <a href="{{ path('app') }}">Home</a> /
-{#    <a href="{{ path('app_collection_view',{'id':collection.id}) }}">{{ collection.name|capitalize }}</a>#}
+    <a href="{{ path('app_item_tag',{'tagName':tagName}) }}">Tag: {{ tagName }}</a>
 {% endblock %}
 
 {% block body %}

@@ -16,7 +16,7 @@ p{
 .footer{
     flex-shrink: 0;
 }
-.main-card, .attribute-card{
+.main-card, .attribute-card, .tags{
     background-color: rgb(var(--bs-tertiary-bg-rgb));
 }
 .main-card .collections-cards .card.collection{
@@ -28,6 +28,6 @@ p{
 .collection-block p{
     text-indent: 1.5em;
 }
-.comments-vew .comment, .tags{
+.comments-vew .comment{
     background-color: rgb(var(--bs-secondary-bg-rgb));
 }
