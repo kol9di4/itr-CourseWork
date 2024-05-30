@@ -4,7 +4,12 @@
 
 {% block body %}
     <script type="application/javascript" src="{{ asset('js/delete-helper.js') }}"></script>
-
+    <h6 class="mt-2">Tags:</h6>
+    <div class="d-flex flex-nowrap tags rounded-1 mt-2 p-1 overflow-x-scroll">
+        {% for tag in tags %}
+            <a href="{{ path('app_item_tag',{'tagName':tag.name}) }}" class="me-2 flex-shrink-0">{{ tag.name }}</a>
+        {% endfor %}
+    </div>
     <div class="collections main-card rounded p-4 pb-0 my-4">
         <h1 class="display-4 text-primary mb-4">Largest collections</h1>
         <div class="collections-cards">

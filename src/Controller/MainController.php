@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Enum\PageSettingsEnum;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\ItemRepository;
+use App\Repository\TagRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
@@ -15,8 +16,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app')]
-    public function index(Request $request, ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request, ItemCollectionRepository $itemCollectionRepository,ItemRepository $itemRepository, PaginatorInterface $paginator,TagRepository $tagRepository): Response
     {
+        $tags = $tagRepository->findAll();
         $items = $itemRepository->findAllSortedByDate();
         $collections = $itemCollectionRepository->findAll();
 
@@ -33,6 +35,7 @@ class MainController extends AbstractController
         return $this->render('collection/index.html.twig', [
             'collections' => $collections,
             'items' => $items,
+            'tags' => $tags,
         ]);
     }
     #[Route('/theme', name: 'app_theme',methods: ['GET','POST'])]

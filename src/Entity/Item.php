@@ -28,7 +28,7 @@ class Item
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'items',cascade: ['persist'])]
     #[Assert\NotBlank]
     private Collection $tags;
 

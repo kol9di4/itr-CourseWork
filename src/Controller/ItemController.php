@@ -41,7 +41,16 @@ class ItemController extends AbstractController
         private ItemRepository $itemRepository,
         private LikeRepository $likeRepository,
     ){}
-
+    #[Route('/tag/{tagName}', name: 'app_item_tag')]
+    public function tag(string $tagName, TagRepository $tagRepository): Response
+    {
+//        $items = $this->itemRepository->findBy(['tag' => $tagRepository->findOneBy(['name' => $tagName])]);
+        $items = ($tagRepository->findOneBy(['name' => $tagName]))->getItems();
+        return $this->render('item/item-tag.html.twig', [
+            'items' => $items,
+            'tagName' => $tagName,
+        ]);
+    }
     #[Route('/collections/{id}/items/create', name: 'app_item_create', methods: ['GET','POST'])]
     public function index(Request $request,ItemCollection $itemCollection,ValidatorInterface $validator, TagRepository $tagRepository): Response
     {
@@ -58,7 +67,6 @@ class ItemController extends AbstractController
         foreach ($allTags as $tag) {
             $whitelistTags .= $tag->getName() . ', ';
         }
-        $item = new Item();
         $form = $this->createForm(ItemType::class, $item);
 
         $form->handleRequest($request);

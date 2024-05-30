@@ -11,5 +11,4 @@ $(function(){
         e.preventDefault();
         switchTeheme('dark');
     })
-
 })
