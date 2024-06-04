@@ -1,1 +1,1 @@
-Посмотреть проект - <a href = "itr-coursework.great-site.net">itr-coursework.great-site.net</a>
+Посмотреть проект - <a href = "http://www.itr-coursework.great-site.net">itr-coursework.great-site.net</a>
