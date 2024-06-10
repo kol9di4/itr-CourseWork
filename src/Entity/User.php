@@ -66,6 +66,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
     #[ORM\Column(enumType: UserStatusEnum::class)]
     private ?UserStatusEnum $status = null;
 
+    /**
+     * @var Collection<int, Issue>
+     */
+    #[ORM\OneToMany(targetEntity: Issue::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $issues;
+
 
 
     public function __construct()
@@ -74,6 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
         $this->comments = new ArrayCollection();
         $this->itemCollections = new ArrayCollection();
         $this->status = UserStatusEnum::Active;
+        $this->issues = new ArrayCollection();
     }
 
     public function isEqualTo(UserInterface $user): bool
@@ -265,6 +272,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
     public function setStatus(UserStatusEnum $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Issue>
+     */
+    public function getIssues(): Collection
+    {
+        return $this->issues;
+    }
+
+    public function addIssue(Issue $issue): static
+    {
+        if (!$this->issues->contains($issue)) {
+            $this->issues->add($issue);
+            $issue->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIssue(Issue $issue): static
+    {
+        if ($this->issues->removeElement($issue)) {
+            // set the owning side to null (unless already changed)
+            if ($issue->getUser() === $this) {
+                $issue->setUser(null);
+            }
+        }
 
         return $this;
     }
