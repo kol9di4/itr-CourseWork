@@ -54,6 +54,7 @@
                     <span class="mb-3 mb-md-0 text-muted">© 2024 Company, Inc</span>
                 </div>
                 <div class="d-flex align-items-center">
+                    {% if app.user %}
                     <div class="jira-button me-2">
                         <a href="{{ path('app_create-issue') }}" type="button" class="btn btn-sm btn-outline-danger">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16">
@@ -63,6 +64,7 @@
                             Create issue
                         </a>
                     </div>
+                    {% endif %}
                     <div class="dropdown">
                         <a href="#" class="nav-link px-3 ps-0 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Color theme</a>
                         <ul class="dropdown-menu border-0">
