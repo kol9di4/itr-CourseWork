@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\IssueRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JiraCloud\Issue\IssueService;
 
 #[ORM\Entity(repositoryClass: IssueRepository::class)]
 class Issue
@@ -22,6 +23,9 @@ class Issue
     #[ORM\ManyToOne(inversedBy: 'issues')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
     public function getId(): ?int
     {
@@ -60,6 +64,27 @@ class Issue
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+    public function getStatus(): string{
+        $issueService = new IssueService();
+        $fields = [
+            'status'
+        ];
+        $issue = $issueService->get($this->idJira);
+
+        return $issue->fields->status->name;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }

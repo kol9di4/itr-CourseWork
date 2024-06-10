@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\IssueRepository;
 use App\Repository\ItemCollectionRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -21,12 +22,31 @@ class ProfileController extends AbstractController
             return count($c1->getItems()) < count($c2->getItems());
         });
         $collections = $paginator->paginate(
-            $collections, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            10 /*limit per page*/
+            $collections,
+            $request->query->getInt('page', 1),
+            10
         );
         return $this->render('profile/index.html.twig', [
             'collections' => $collections,
+            'user' => $user,
+        ]);
+    }
+    #[Route('/profile/{userName}/issues', name: 'app_issues')]
+    public function issues(Request $request, IssueRepository $issueRepository, UserRepository $userRepository, PaginatorInterface $paginator, string $userName): Response
+    {
+        $user = $userRepository->findOneBy(['username' => $userName]);
+        if ($user !== $this->getUser() || !isset($user)) {
+            $this->addFlash('danger','Access only for user "'.$userName.'"!');
+            return $this->redirectToRoute('app');
+        }
+        $issues = $issueRepository->findIssuesOrderAsc($user);
+        $issues = $paginator->paginate(
+            $issues,
+            $request->query->getInt('page', 1),
+            10,
+        );
+        return $this->render('profile/issues.html.twig', [
+            'issues' => $issues,
             'user' => $user,
         ]);
     }

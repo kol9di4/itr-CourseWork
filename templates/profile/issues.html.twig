@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All collections{% endblock %}
+
+{% block links %}
+    <a href="{{ path('app') }}">Home</a> /
+    <a href="{{ path('app_profile',{'userName':user.username}) }}">{{user.username|capitalize}}  profile</a>
+{% endblock %}
+
+{% block body %}
+    <script type="application/javascript" src="{{ asset('js/delete-helper.js') }}"></script>
+
+    <div class="collections main-card rounded p-4 my-4">
+        <div class="d-flex align-items-center mb-4">
+            <h1 class="display-4 text-primary me-2">All {{user.username|capitalize}}'s  issues: {{ issues.getTotalItemCount }} </h1>
+        </div>
+        <div class="issue-cards">
+            {% for issue in issues %}
+                <div class="card my-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <p class="mb-0 me-4">{{ issue.idJira }}</p>
+                            <p class="h4 mb-0">{{ issue.name }}</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p class="h6 mb-0  me-4">Status: {{ issue.getStatus }}</p>
+                            <a href="{{ issue.link }}">Jira Link</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {{ knp_pagination_render(issues) }}
+        </div>
+    </div>
+
+{% endblock %}

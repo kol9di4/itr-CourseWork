@@ -15,21 +15,16 @@ class IssueRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Issue::class);
     }
-
-    //    /**
-    //     * @return Issue[] Returns an array of Issue objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('i.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+        public function findIssuesOrderAsc($user): array
+        {
+            return $this->createQueryBuilder('i')
+                ->andWhere('i.user = :val')
+                ->setParameter('val', $user)
+                ->orderBy('i.id', 'DESC')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
     //    public function findOneBySomeField($value): ?Issue
     //    {

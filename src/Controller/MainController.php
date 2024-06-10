@@ -84,6 +84,7 @@ class MainController extends AbstractController
             $issueId = $jiraResponse->id;
             $issue = new \App\Entity\Issue();
             $issue
+                ->setName($issueName)
                 ->setIdJira($issueId)
                 ->setLink($issueLink);
             $this->entityManager->persist($issue);
